@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will My Sofa Fit Through the Door? Sofa Fit Calculator</title>
+<meta name="description" content="Type your sofa&#x27;s width, depth, height and diagonal depth, and the doorway. See if it goes through, needs tipping back, or gets round the turn.">
+<link rel="canonical" href="https://getscooch.com/sofa-fit-calculator/">
+<meta name="apple-itunes-app" content="app-id=6799503727">
+<meta name="theme-color" content="#12160b">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Scooch">
+<meta property="og:title" content="Will My Sofa Fit Through the Door? Sofa Fit Calculator">
+<meta property="og:description" content="Type your sofa&#x27;s width, depth, height and diagonal depth, and the doorway. See if it goes through, needs tipping back, or gets round the turn.">
+<meta property="og:url" content="https://getscooch.com/sofa-fit-calculator/">
+<meta property="og:image" content="https://getscooch.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ozolsdev">
+<meta name="twitter:title" content="Will My Sofa Fit Through the Door? Sofa Fit Calculator">
+<meta name="twitter:description" content="Type your sofa&#x27;s width, depth, height and diagonal depth, and the doorway. See if it goes through, needs tipping back, or gets round the turn.">
+<meta name="twitter:image" content="https://getscooch.com/assets/og-image.png">
+<link rel="preconnect" href="https://eu.i.posthog.com">
+<script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing startSessionRecording stopSessionRecording isSessionRecordingStarted".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) && location.hostname !== '') {
+        posthog.init('phc_ztIjBWZp495eGWUZSUprsXSLzyElBWMcf2xc65kKfE5', {
+            api_host: 'https://eu.i.posthog.com',
+            person_profiles: 'identified_only',
+            persistence: 'memory',
+            autocapture: false,
+            disable_session_recording: true
+        });
+        posthog.register({ app_name: 'scooch_web' });
+    }
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sofa fit calculator",
+  "url": "https://getscooch.com/sofa-fit-calculator/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Checks whether a sofa fits through a doorway, straight, on its back or tipped back by its diagonal depth, and whether it gets round a turn in a hallway."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is diagonal depth on a sofa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The distance from the bottom back corner of the sofa to a straight edge laid from the top of the back to the front of the arm. It is the narrowest the sofa gets when you tip it back, so if it is smaller than the doorway, the sofa can be tipped through even when its depth and height are not."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much room should I leave in the doorway?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At least 2.5 cm (1 in). Moving blankets, the door handle and an unsteady grip all take a little of it. The calculator marks anything closer than that as only just fitting."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does taking the door off help?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually, yes. An open door still sits in the opening and narrows it by about its own thickness. With the door off its hinges, measure again from frame to frame, minus the door stops."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about stairs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stairs add two things to check: the headroom where the stairs turn, and the width of the landing. Measure the narrowest point of the whole route. A tight turn on a landing is where standing the sofa on its end often helps."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "It gets through the door. Will it fit the room?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That is the other half of the job. Draw the room at its real size and place the sofa at the size from the listing, with room to walk round it. Scooch does exactly that on iPhone."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://getscooch.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Sofa fit calculator",
+      "item": "https://getscooch.com/sofa-fit-calculator/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav-logo" href="/">
+      <img src="/assets/apple-touch-icon.png" alt="" width="34" height="34">
+      Scooch
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/sofa-fit-calculator/">Sofa fit calculator</a>
+      <a href="/guides/">Guides</a>
+      <a href="/#faq">FAQ</a>
+      <a class="nav-cta" href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Tool&amp;mt=8" data-ph="appstore_click">Download</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+<article class="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › Sofa fit calculator</nav>
+  <h1>Will my sofa fit through the door?</h1>
+  <p class="lede">Type in the sofa and the doorway. The calculator tells you whether it goes straight through, needs tipping back, or will not make it, and whether it gets round a turn on the way. It all runs in your browser: nothing you type is sent anywhere.</p>
+
+  <form class="fit-tool" id="fit-form" novalidate>
+    <div class="unit-toggle" role="radiogroup" aria-label="Units">
+      <label><input type="radio" name="unit" value="cm" checked><span>cm</span></label>
+      <label><input type="radio" name="unit" value="in"><span>inches</span></label>
+    </div>
+    <fieldset>
+      <legend>Your sofa</legend>
+      <div class="fit-grid">
+        <label for="sofa-w"><span class="name">Width</span>
+          <span class="fit-field"><input id="sofa-w" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> arm to arm
+        </label>
+        <label for="sofa-d"><span class="name">Depth</span>
+          <span class="fit-field"><input id="sofa-d" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> back to front
+        </label>
+        <label for="sofa-h"><span class="name">Height</span>
+          <span class="fit-field"><input id="sofa-h" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> floor to top of back
+        </label>
+        <label for="sofa-dd"><span class="name">Diagonal depth</span>
+          <span class="fit-field"><input id="sofa-dd" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> optional, see below
+        </label>
+        <label for="legs"><span class="name">Legs that come off</span>
+          <span class="fit-field"><input id="legs" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> optional, their height
+        </label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>The doorway</legend>
+      <div class="fit-grid">
+        <label for="door-w"><span class="name">Width</span>
+          <span class="fit-field"><input id="door-w" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> the open gap
+        </label>
+        <label for="door-h"><span class="name">Height</span>
+          <span class="fit-field"><input id="door-h" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> optional, 200 cm if empty
+        </label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>A turn on the way <span class="opt">(optional)</span></legend>
+      <div class="fit-grid">
+        <label for="hall-a"><span class="name">Hallway width</span>
+          <span class="fit-field"><input id="hall-a" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> before the turn
+        </label>
+        <label for="hall-b"><span class="name">Width after the turn</span>
+          <span class="fit-field"><input id="hall-b" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> the door's, if empty
+        </label>
+        <label for="ceiling"><span class="name">Ceiling height</span>
+          <span class="fit-field"><input id="ceiling" type="number" inputmode="decimal" min="0" step="any"><span class="unit-label">cm</span></span> for standing it on end
+        </label>
+      </div>
+    </fieldset>
+    <button class="fit-submit" type="submit">Check the fit</button>
+    <div id="fit-result" aria-live="polite"></div>
+  </form>
+
+  <h2>How to measure the sofa</h2>
+  <ul>
+    <li><strong>Width:</strong> arm to arm, at the widest point.</li>
+    <li><strong>Depth:</strong> from the back to the front of the arm or the seat, whichever sticks out further.</li>
+    <li><strong>Height:</strong> from the floor to the top of the back. If the legs unscrew, measure them too: the calculator takes them off the height.</li>
+    <li><strong>Diagonal depth:</strong> lay a straight edge, like a broom handle, from the top of the back to the front of the arm. Then measure from the bottom back corner of the sofa up to the straight edge, at a right angle. Shop listings often give it too.</li>
+  </ul>
+  <figure class="diagram">
+  <svg viewBox="0 0 560 330" role="img" aria-labelledby="dd-title">
+    <title id="dd-title">Side view of a sofa: depth along the floor, height up the back, and the diagonal depth measured from the bottom back corner to a straight edge laid from the top of the back to the front of the arm</title>
+    <g fill="none" stroke="#3b4527" stroke-width="2"><line x1="40" y1="260" x2="520" y2="260"/></g>
+    <polygon points="80,245 80,39 130,39 130,91 314,91 314,245" fill="#c77deb" fill-opacity="0.28" stroke="#c77deb" stroke-width="2.5"/>
+    <rect x="88" y="245" width="12" height="15" fill="#c77deb" fill-opacity="0.6"/>
+    <rect x="294" y="245" width="12" height="15" fill="#c77deb" fill-opacity="0.6"/>
+    <line x1="66" y1="35.9" x2="340" y2="96.8" stroke="#eef2e2" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <line x1="80" y1="245" x2="123.6" y2="48.7" stroke="#a6c25f" stroke-width="3.5"/>
+    <circle cx="80" cy="245" r="4.5" fill="#a6c25f"/>
+    <circle cx="123.6" cy="48.7" r="4.5" fill="#a6c25f"/>
+    <g stroke="#aab392" stroke-width="1.5">
+      <line x1="80" y1="290" x2="314" y2="290"/><line x1="80" y1="282" x2="80" y2="298"/><line x1="314" y1="282" x2="314" y2="298"/>
+      <line x1="44" y1="39" x2="44" y2="260"/><line x1="36" y1="39" x2="52" y2="39"/><line x1="36" y1="260" x2="52" y2="260"/>
+    </g>
+    <g font-family="-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="15" fill="#aab392">
+      <text x="197" y="314" text-anchor="middle">Depth</text>
+      <text x="30" y="150" text-anchor="middle" transform="rotate(-90 30 150)">Height</text>
+      <text x="350" y="92" fill="#eef2e2">straight edge</text>
+      <text x="112" y="175" fill="#cfe09a" font-weight="700" transform="rotate(-77.5 112 175)" text-anchor="middle">Diagonal depth</text>
+    </g>
+  </svg>
+  <figcaption>Diagonal depth: from the bottom back corner, at a right angle, up to a straight edge laid from the top of the back to the front of the arm.</figcaption>
+</figure>
+
+  <h2>How to measure the doorway</h2>
+  <ul>
+    <li><strong>Width:</strong> open the door all the way and measure the narrowest gap. That is usually from the door stop on one side to the face of the open door on the other, not the frame.</li>
+    <li><strong>Height:</strong> from the floor to the underside of the frame.</li>
+    <li><strong>A turn on the way:</strong> if the sofa has to turn from a hallway into the door, measure the hallway's narrowest width. The calculator assumes it turns straight into the doorway unless you give the width after the turn.</li>
+  </ul>
+
+  <h2>What the answer means</h2>
+  <ul>
+    <li><strong>Straight through:</strong> the gap is wider than the sofa's depth, carried upright, or its height, carried on its back.</li>
+    <li><strong>Tipped back:</strong> neither fits, but the diagonal depth does. Tip the sofa back and swing it through the opening.</li>
+    <li><strong>The turn:</strong> the calculator works out the longest box that can be carried level round a right-angle turn. Standing a sofa on its end can beat that, if the ceiling is high enough. Movers also tilt and twist, which this flat-floor maths does not count, so a near miss is worth a second look.</li>
+  </ul>
+
+  <h2>If it does not fit</h2>
+  <ul>
+    <li>Take the legs off. Many screw off by hand.</li>
+    <li>Take the door off its hinges and measure again.</li>
+    <li>Ask the shop whether the back or the arms come off, or whether it comes in sections. Many corner sofas arrive in two or more pieces.</li>
+    <li>Measure the whole route, not just one door: the front door, the stairs, the landings, the turn into the room. The tightest point decides.</li>
+  </ul>
+
+  <h2>Then make sure it fits the room</h2>
+  <p>Getting it through the door is half the job. The other half is whether it fits the room with space to walk round it. In <a href="/">Scooch</a>, draw the room at its real measurements, add the sofa at the size from the listing, and anything that clashes turns red, before anything heavy moves. There are typical sizes in the <a href="/guides/standard-sofa-dimensions/">sofa dimensions guide</a>.</p>
+
+<a class="article-cta" href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Tool&amp;mt=8" data-ph="appstore_click" aria-label="Download Scooch on the App Store">
+    <h2>Fits the door. Does it fit the room?</h2>
+    <p>Draw the room, drop in the sofa at its real size, and see what fits.</p>
+    <div class="cta-row">
+      <span class="badge-link">
+        <img src="/assets/appstore-badge.svg" alt="Download on the App Store" width="180" height="60">
+      </span>
+    </div>
+  </a>
+
+  <h2>Common questions</h2>
+  <div class="faq-list">
+      <details>
+        <summary>What is diagonal depth on a sofa?</summary>
+        <p>The distance from the bottom back corner of the sofa to a straight edge laid from the top of the back to the front of the arm. It is the narrowest the sofa gets when you tip it back, so if it is smaller than the doorway, the sofa can be tipped through even when its depth and height are not.</p>
+      </details>
+      <details>
+        <summary>How much room should I leave in the doorway?</summary>
+        <p>At least 2.5 cm (1 in). Moving blankets, the door handle and an unsteady grip all take a little of it. The calculator marks anything closer than that as only just fitting.</p>
+      </details>
+      <details>
+        <summary>Does taking the door off help?</summary>
+        <p>Usually, yes. An open door still sits in the opening and narrows it by about its own thickness. With the door off its hinges, measure again from frame to frame, minus the door stops.</p>
+      </details>
+      <details>
+        <summary>What about stairs?</summary>
+        <p>Stairs add two things to check: the headroom where the stairs turn, and the width of the landing. Measure the narrowest point of the whole route. A tight turn on a landing is where standing the sofa on its end often helps.</p>
+      </details>
+      <details>
+        <summary>It gets through the door. Will it fit the room?</summary>
+        <p>That is the other half of the job. Draw the room at its real size and place the sofa at the size from the listing, with room to walk round it. Scooch does exactly that on iPhone. <a href="/guides/standard-sofa-dimensions/">Read more</a></p>
+      </details>
+  </div>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="/assets/apple-touch-icon.png" alt="" width="30" height="30">
+          Scooch
+        </div>
+        <p class="footer-note">Room and floor planner for iPhone. Will it fit?<br>Requires iOS 26 or later.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/sofa-fit-calculator/">Sofa fit calculator</a>
+        <a href="/guides/">Guides</a>
+        <a href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Tool&amp;mt=8" data-ph="appstore_click">App Store</a>
+        <a href="/support/">Support</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="https://ozols.dev" rel="author">Made by Emils Ozols</a>
+      </div>
+    </div>
+    <p class="footer-note">© Emils Ozols. Apple, iPhone, and the App Store badge are trademarks of Apple Inc.</p>
+  </div>
+</footer>
+<script>
+    // posthog.capture exists only after posthog.init, which is skipped on localhost: guard it,
+    // so a preview click still works and no tracking call can stop the page responding.
+    document.addEventListener('click', function (e) {
+        var el = e.target.closest('[data-ph]');
+        if (!el) return;
+        try {
+            if (window.posthog && typeof posthog.capture === 'function') {
+                posthog.capture(el.getAttribute('data-ph'), { page: location.pathname });
+            }
+        } catch (err) {}
+    });
+</script>
+<script src="/assets/fit.js" defer></script>
+</body>
+</html>

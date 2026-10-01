@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scooch: Room and Floor Planner for iPhone. Will It Fit?</title>
+<meta name="description" content="Draw your rooms at their real measurements, place furniture at real sizes, and see what fits before you move anything heavy. A no-nonsense floor plan app for iPhone.">
+<link rel="canonical" href="https://getscooch.com/">
+<meta name="apple-itunes-app" content="app-id=6799503727">
+<meta name="theme-color" content="#12160b">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Scooch">
+<meta property="og:title" content="Scooch: Room and Floor Planner for iPhone. Will It Fit?">
+<meta property="og:description" content="Draw the room, drop in the furniture at real size, and see what fits before anything heavy moves.">
+<meta property="og:url" content="https://getscooch.com/">
+<meta property="og:image" content="https://getscooch.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ozolsdev">
+<meta name="twitter:title" content="Scooch: Room and Floor Planner for iPhone. Will It Fit?">
+<meta name="twitter:description" content="Draw the room, drop in the furniture at real size, and see what fits before anything heavy moves.">
+<meta name="twitter:image" content="https://getscooch.com/assets/og-image.png">
+<link rel="preconnect" href="https://eu.i.posthog.com">
+<script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing startSessionRecording stopSessionRecording isSessionRecordingStarted".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) && location.hostname !== '') {
+        posthog.init('phc_ztIjBWZp495eGWUZSUprsXSLzyElBWMcf2xc65kKfE5', {
+            api_host: 'https://eu.i.posthog.com',
+            person_profiles: 'identified_only',
+            persistence: 'memory',
+            autocapture: false,
+            disable_session_recording: true
+        });
+        posthog.register({ app_name: 'scooch_web' });
+    }
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Scooch",
+  "operatingSystem": "iOS 26 or later",
+  "applicationCategory": "DesignApplication",
+  "description": "Room and floor planner for iPhone. Draw rooms at their real measurements, place furniture at real sizes, and see what fits and what collides before you move anything.",
+  "url": "https://getscooch.com/",
+  "downloadUrl": "https://apps.apple.com/app/id6799503727",
+  "author": {
+    "@type": "Person",
+    "name": "Emils Ozols",
+    "url": "https://ozols.dev"
+  },
+  "image": "https://getscooch.com/assets/icon-512.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Scooch free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scooch is free to download, and your first room is on the house: draw it and see what fits. Keeping going is a one-time unlock, not a subscription. The price is shown in the app before you buy. If you had Scooch before version 1.0.1, everything stays unlocked for you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I type exact sizes from a shop listing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Tap any piece of furniture or any room and type the numbers. Typed sizes stay exact, and the drawing redraws to match: more cushions on a wider sofa, more plates on a longer table."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work in inches?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Switch between metric and imperial in Settings, and every measurement follows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it tell me if a sofa fits through my door?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The app plans the room. For the doorway, use the free sofa fit calculator on this site: it checks the opening, tipping the sofa back, and a turn in the hallway."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a corner sofa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, as one L-shaped piece. Type the depth of each side on its own, mirror it to swap the side, and turn on the sofa bed to see where it pulls out."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where are my plans stored?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On your iPhone. If iCloud is available, Scooch also keeps a backup in your own iCloud, so a new phone can pick up where you left off. There is no account, and nothing is sent to me."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I share or print a plan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Export any plan as a PNG image or a PDF page and share it like any other file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Scooch have ads, or need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No ads and no account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there an Android version?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not at the moment: Scooch is made for iPhone."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav-logo" href="/">
+      <img src="/assets/apple-touch-icon.png" alt="" width="34" height="34">
+      Scooch
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/sofa-fit-calculator/">Sofa fit calculator</a>
+      <a href="/guides/">Guides</a>
+      <a href="/#faq">FAQ</a>
+      <a class="nav-cta" href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Home&amp;mt=8" data-ph="appstore_click">Download</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="download">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Room and floor planner for iPhone</span>
+      <h1>Will it fit? Find out <span class="accent">before you carry it</span></h1>
+      <p class="hero-sub">The tape measure says 214 cm. The room disagrees. Moving day is a bad time to find out who is right. Scooch draws your rooms at their real measurements and your furniture at real sizes, so you see what fits and what collides before anything heavy moves.</p>
+      <div class="cta-row">
+        <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Home&amp;mt=8" data-ph="appstore_click" aria-label="Download Scooch on the App Store">
+          <img src="/assets/appstore-badge.svg" alt="Download on the App Store" width="180" height="60">
+        </a>
+        <a class="btn-secondary" href="/sofa-fit-calculator/">Sofa fit calculator</a>
+      </div>
+      <div class="trust-row">
+        <span>Typed sizes stay exact</span>
+        <span>Metric or imperial</span>
+        <span>No account, no ads</span>
+        <span>One-time unlock, no subscription</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img class="screen" src="/assets/shot-plan.webp" alt="Scooch on iPhone: a two-room flat drawn to scale, with furniture placed and every wall measured" width="640" height="1284" fetchpriority="high">
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>A measuring tape that draws</h2>
+      <p>Not photorealistic renders. Clean shapes at real sizes, and an honest answer.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></div>
+        <h3>Rooms at their real size</h3>
+        <p>Type a wall's length and it stays exact. Every wall shows its measurement, in metric or imperial.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h16"/><path d="M6 21V4h8v17"/><path d="M14 4c3.5 1 5.5 4.5 5.5 9"/><circle cx="11.5" cy="12.5" r="0.9" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Doors and windows on the walls</h3>
+        <p>Doors, windows and arches slide along a wall, with real swing arcs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V8a2 2 0 012-2h12a2 2 0 012 2v3"/><path d="M2 12a2 2 0 014 0v2h12v-2a2 2 0 014 0v5H2z"/><path d="M5 17v2M19 17v2"/></svg></div>
+        <h3>Furniture that keeps up</h3>
+        <p>37 pieces at real sizes. Stretch a dining table and it sets more plates. Widen a sofa and it gets more cushions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="11" height="9" rx="1.5"/><rect x="10" y="4" width="11" height="9" rx="1.5"/><path d="M10 7h4v6h-4z" fill="currentColor" stroke="none" opacity="0.6"/></svg></div>
+        <h3>Clashes in red</h3>
+        <p>A piece that overlaps another or sticks out of the room turns red. Chairs tucked under a table are fine.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V6"/><path d="M4 6h10"/><path d="M14 6c0 7.7-4.3 14-10 14" stroke-dasharray="2.5 2.5"/></svg></div>
+        <h3>Room to open</h3>
+        <p>Doors, drawers and sofa beds can show the space they need to open.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v6H9v8H3z"/><path d="M3 12h6"/></svg></div>
+        <h3>Corner sofas</h3>
+        <p>One L-shaped piece with its own depth on each side, and a sofa bed that pulls out to the corner.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3l5 5L9 20H4v-5z"/><path d="M13 6l5 5"/></svg></div>
+        <h3>Draw your own</h3>
+        <p>Missing a piece? Draw it, type its size, and it behaves like any other.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="8" height="7" rx="1.2"/><rect x="13" y="4" width="8" height="7" rx="1.2"/><rect x="3" y="13" width="8" height="7" rx="1.2"/><path d="M17 14v6M14 17h6"/></svg></div>
+        <h3>As many plans as you need</h3>
+        <p>Your flat, the summer place, the office move. Export any plan as a PNG or a PDF.</p>
+      </div>
+    </div>
+    <p class="extras"><strong>Also in the box:</strong> 26 themes, a native Liquid Glass design for iOS 26, plans that join rooms into an L or a U, and an automatic backup to your own iCloud.</p>
+  </div>
+</section>
+
+<!-- ============ SCREENSHOTS ============ -->
+<section id="screenshots">
+  <div class="container">
+    <div class="section-head">
+      <h2>See it in action</h2>
+      <p>Real screens, straight from the app.</p>
+    </div>
+  </div>
+  <div class="shots-marquee">
+      <div class="shots-track">
+        <div class="shots-set">
+          <figure>
+            <img class="screen" src="/assets/shot-plan.webp" alt="A two-room flat drawn to scale, every wall measured" loading="lazy" width="640" height="1284">
+            <figcaption>Your rooms at their real size</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-clash.webp" alt="A 360 cm sofa flagged red because it does not fit the room" loading="lazy" width="640" height="1284">
+            <figcaption>Red means it does not fit</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-projections.webp" alt="Furniture doors, drawers and a sofa bed showing the space they need" loading="lazy" width="640" height="1284">
+            <figcaption>Room to open</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-furniture.webp" alt="The furniture list with each piece&#x27;s default size" loading="lazy" width="640" height="1284">
+            <figcaption>Real sizes to start from</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-draw.webp" alt="Drawing a dining table at 140 by 90 cm" loading="lazy" width="640" height="1284">
+            <figcaption>Draw your own furniture</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-plans.webp" alt="Three plans: a flat, a studio and an office" loading="lazy" width="640" height="1284">
+            <figcaption>Every place you plan</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-linen.webp" alt="The same flat in the light Linen theme" loading="lazy" width="640" height="1284">
+            <figcaption>26 themes</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-amethyst.webp" alt="The same flat in the Amethyst theme" loading="lazy" width="640" height="1284">
+            <figcaption>Dark or light</figcaption>
+          </figure>
+        </div>
+        <div class="shots-set" aria-hidden="true">
+          <figure>
+            <img class="screen" src="/assets/shot-plan.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Your rooms at their real size</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-clash.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Red means it does not fit</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-projections.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Room to open</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-furniture.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Real sizes to start from</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-draw.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Draw your own furniture</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-plans.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Every place you plan</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-linen.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>26 themes</figcaption>
+          </figure>
+          <figure>
+            <img class="screen" src="/assets/shot-amethyst.webp" alt="" loading="lazy" width="640" height="1284">
+            <figcaption>Dark or light</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <h2>How it works</h2>
+      <p>From "will it fit?" to an answer, in three steps.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Draw the room</h3>
+        <p>Type the walls in, then slide the doors and windows to where they really are. <a href="/guides/how-to-measure-a-room-for-furniture/">How to measure a room</a>.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>Add the furniture</h3>
+        <p>Pick from the list and type the sizes from the shop listing, or draw your own piece.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>See what fits</h3>
+        <p>Anything that clashes turns red. A couch that will not fit is a lot easier to move on screen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLS AND GUIDES ============ -->
+<section id="guides">
+  <div class="container">
+    <div class="section-head">
+      <h2>Free tools and guides</h2>
+      <p>The numbers worth knowing before anything is delivered.</p>
+    </div>
+    <div class="guide-grid">
+      <a class="guide-card tool" href="/sofa-fit-calculator/">
+        <h3>Will my sofa fit through the door?</h3>
+        <p>The sofa fit calculator: the doorway, tipping it back, and the turn in the hallway.</p>
+        <span class="more">Check the fit</span>
+      </a>
+      <a class="guide-card" href="/guides/standard-sofa-dimensions/">
+        <h3>Standard Sofa Dimensions, in cm and Inches</h3>
+        <p>Typical widths, depths and heights by number of seats, and how far a sofa bed opens.</p>
+        <span class="more">Read the guide</span>
+      </a>
+      <a class="guide-card" href="/guides/corner-sofa-dimensions/">
+        <h3>Corner Sofa Dimensions and How to Measure for One</h3>
+        <p>Typical sizes, left-hand versus right-hand, and how to measure the corner.</p>
+        <span class="more">Read the guide</span>
+      </a>
+      <a class="guide-card" href="/guides/bed-sizes-and-space-around-a-bed/">
+        <h3>Bed Sizes and How Much Space You Need Around a Bed</h3>
+        <p>US, UK and European mattress sizes, and the room to leave on each side.</p>
+        <span class="more">Read the guide</span>
+      </a>
+      <a class="guide-card" href="/guides/space-between-sofa-coffee-table-and-tv/">
+        <h3>How Much Space Between a Sofa, Coffee Table and TV</h3>
+        <p>Sofa to coffee table, sofa to TV, and how wide to keep the walkways.</p>
+        <span class="more">Read the guide</span>
+      </a>
+      <a class="guide-card" href="/guides/dining-table-clearance/">
+        <h3>How Much Space Do You Need Around a Dining Table?</h3>
+        <p>Room for the chairs, room to walk behind them, and how many seats fit.</p>
+        <span class="more">Read the guide</span>
+      </a>
+      <a class="guide-card" href="/guides/how-to-measure-a-room-for-furniture/">
+        <h3>How to Measure a Room for Furniture</h3>
+        <p>Walls, doors, windows, radiators, and the things people forget to measure.</p>
+        <span class="more">Read the guide</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Is Scooch free?</summary>
+        <p>Scooch is free to download, and your first room is on the house: draw it and see what fits. Keeping going is a one-time unlock, not a subscription. The price is shown in the app before you buy. If you had Scooch before version 1.0.1, everything stays unlocked for you. <a href="/terms/">Read more</a></p>
+      </details>
+      <details>
+        <summary>Can I type exact sizes from a shop listing?</summary>
+        <p>Yes. Tap any piece of furniture or any room and type the numbers. Typed sizes stay exact, and the drawing redraws to match: more cushions on a wider sofa, more plates on a longer table.</p>
+      </details>
+      <details>
+        <summary>Does it work in inches?</summary>
+        <p>Yes. Switch between metric and imperial in Settings, and every measurement follows.</p>
+      </details>
+      <details>
+        <summary>Can it tell me if a sofa fits through my door?</summary>
+        <p>The app plans the room. For the doorway, use the free sofa fit calculator on this site: it checks the opening, tipping the sofa back, and a turn in the hallway. <a href="/sofa-fit-calculator/">Read more</a></p>
+      </details>
+      <details>
+        <summary>Is there a corner sofa?</summary>
+        <p>Yes, as one L-shaped piece. Type the depth of each side on its own, mirror it to swap the side, and turn on the sofa bed to see where it pulls out. <a href="/guides/corner-sofa-dimensions/">Read more</a></p>
+      </details>
+      <details>
+        <summary>Where are my plans stored?</summary>
+        <p>On your iPhone. If iCloud is available, Scooch also keeps a backup in your own iCloud, so a new phone can pick up where you left off. There is no account, and nothing is sent to me. <a href="/privacy/">Read more</a></p>
+      </details>
+      <details>
+        <summary>Can I share or print a plan?</summary>
+        <p>Yes. Export any plan as a PNG image or a PDF page and share it like any other file.</p>
+      </details>
+      <details>
+        <summary>Does Scooch have ads, or need an account?</summary>
+        <p>No ads and no account. <a href="#download">Get the app</a></p>
+      </details>
+      <details>
+        <summary>Is there an Android version?</summary>
+        <p>Not at the moment: Scooch is made for iPhone.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section>
+  <div class="container">
+    <a class="cta-band" href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Home&amp;mt=8" data-ph="appstore_click" aria-label="Download Scooch on the App Store">
+      <h2>Measure once, move nothing</h2>
+      <p>Draw your first room free, then unlock everything with one payment. No subscription.</p>
+      <div class="cta-row">
+        <span class="badge-link">
+          <img src="/assets/appstore-badge.svg" alt="Download on the App Store" width="180" height="60">
+        </span>
+      </div>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="/assets/apple-touch-icon.png" alt="" width="30" height="30">
+          Scooch
+        </div>
+        <p class="footer-note">Room and floor planner for iPhone. Will it fit?<br>Requires iOS 26 or later.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/sofa-fit-calculator/">Sofa fit calculator</a>
+        <a href="/guides/">Guides</a>
+        <a href="https://apps.apple.com/app/apple-store/id6799503727?pt=2187944&amp;ct=Website_Home&amp;mt=8" data-ph="appstore_click">App Store</a>
+        <a href="/support/">Support</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="https://ozols.dev" rel="author">Made by Emils Ozols</a>
+      </div>
+    </div>
+    <p class="footer-note">© Emils Ozols. Apple, iPhone, and the App Store badge are trademarks of Apple Inc.</p>
+  </div>
+</footer>
+<script>
+    // posthog.capture exists only after posthog.init, which is skipped on localhost: guard it,
+    // so a preview click still works and no tracking call can stop the page responding.
+    document.addEventListener('click', function (e) {
+        var el = e.target.closest('[data-ph]');
+        if (!el) return;
+        try {
+            if (window.posthog && typeof posthog.capture === 'function') {
+                posthog.capture(el.getAttribute('data-ph'), { page: location.pathname });
+            }
+        } catch (err) {}
+    });
+</script>
+
+</body>
+</html>
