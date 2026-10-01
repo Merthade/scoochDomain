@@ -34,7 +34,11 @@
             person_profiles: 'identified_only',
             persistence: 'memory',
             autocapture: false,
-            disable_session_recording: true
+            disable_session_recording: true,
+            capture_dead_clicks: false,
+            capture_performance: false,
+            enable_heatmaps: false,
+            disable_surveys: true
         });
         posthog.register({ app_name: 'scooch_web' });
     }
