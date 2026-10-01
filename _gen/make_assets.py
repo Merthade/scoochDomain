@@ -5,7 +5,8 @@
   the App Store's own render of AppIcon.icon (an Icon Composer file has no PNG to read).
 - Screenshots: the App Store raws (Marketing/screenshots/raw/en, the store seed) framed in
   AlarmPlanner's web shell (side buttons that protrude), WebP at one uniform size. The raws
-  already carry the Dynamic Island, so the shell does not draw one.
+  already carry the Dynamic Island pill but not the front camera in it (Emil, 2026-10-01):
+  add_camera() measures the pill in each raw and draws the lens at its right end.
 - og-image.png (1200x630): the store set's 'leafviolet' gradient, the name, one line, the plan.
 
 Needs Pillow. Run from anywhere: python3 _gen/make_assets.py
@@ -41,6 +42,49 @@ SHOTS = {
     "shot-linen.webp":       "theme_linen.png",
     "shot-amethyst.webp":    "theme_amethyst.png",
 }
+
+
+def island_bbox(img):
+    """The pure-black pill at the top centre of a raw: (left, top, right, bottom)."""
+    rgb = img.convert("RGB")
+    w = rgb.width
+    cx = w // 2
+    black = lambda x, y: max(rgb.getpixel((x, y))) < 8
+    ys = [y for y in range(0, int(w * 0.17)) if black(cx, y)]
+    if not ys:
+        raise SystemExit("no Dynamic Island in this raw: refusing to frame it without one")
+    top, bottom = min(ys), max(ys)
+    mid = (top + bottom) // 2
+    left = right = cx
+    while left > 0 and black(left - 1, mid):
+        left -= 1
+    while right < w - 1 and black(right + 1, mid):
+        right += 1
+    return left, top, right, bottom
+
+
+def add_camera(img):
+    """The front camera lens in the island: a dark lens with a faint blue glint, centred half
+    the island's height in from its right end, about a third of its height across."""
+    img = img.convert("RGBA")
+    left, top, right, bottom = island_bbox(img)
+    h = bottom - top + 1
+    r = h * 0.17
+    cx, cy = right + 1 - h * 0.5, top + h / 2
+    ss = 8                                       # supersample, so the circle edge is smooth
+    size = int(r * 2 * ss) + 2
+    lens = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lens)
+    c = size / 2
+    d.ellipse([c - r * ss, c - r * ss, c + r * ss, c + r * ss], fill=(26, 28, 42, 255))
+    ri = r * 0.62 * ss
+    d.ellipse([c - ri, c - ri, c + ri, c + ri], fill=(9, 10, 18, 255))
+    rg, gx, gy = r * 0.2 * ss, c - r * 0.28 * ss, c - r * 0.28 * ss
+    d.ellipse([gx - rg, gy - rg, gx + rg, gy + rg], fill=(78, 96, 160, 150))
+    px = max(1, round(size / ss))
+    lens = lens.resize((px, px), Image.LANCZOS)
+    img.alpha_composite(lens, (round(cx - px / 2), round(cy - px / 2)))
+    return img
 
 
 def shell(img):
@@ -116,7 +160,7 @@ def og_image():
     d.text((72, 492), "Room & floor planner for iPhone", font=ImageFont.truetype(FONT_BOLD, 30),
            fill=(0xDC, 0xE8, 0xB8, 255))
 
-    phone = shell(Image.open(os.path.join(RAW, "plan.png")))
+    phone = shell(add_camera(Image.open(os.path.join(RAW, "plan.png"))))
     phone.thumbnail((10_000, 560), Image.LANCZOS)
     img.alpha_composite(phone, (W - phone.width - 96, (H - phone.height) // 2))
 
@@ -138,7 +182,7 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     icons()
     for name, raw in SHOTS.items():
-        framed = shell(Image.open(os.path.join(RAW, raw)))
+        framed = shell(add_camera(Image.open(os.path.join(RAW, raw))))
         height = round(WEB_W * framed.height / framed.width)
         save_webp(framed.resize((WEB_W, height), Image.LANCZOS), name)
     og_image()
