@@ -316,7 +316,7 @@ PAGES = [
 # ---------------------------------------------------------------- sofa sizes
 dict(
 slug="standard-sofa-dimensions",
-title="Standard Sofa Dimensions in cm and Inches, by Number of Seats",
+title="Standard Sofa Dimensions in cm and Inches, by Seat Count",
 meta="Typical sofa sizes by number of seats, in cm and inches: width, depth, height and seat height, plus how much room a sofa bed needs when it is open.",
 h1="Standard Sofa Dimensions, in cm and Inches",
 lede="There is no official sofa size, but most sofas land in the same ranges. Here they are, with the numbers worth checking before you order one.",
@@ -492,7 +492,7 @@ cta_p="Drag the sofa, the table and the TV around at real size. Your back will t
 # ---------------------------------------------------------------- dining
 dict(
 slug="dining-table-clearance",
-title="How Much Space Around a Dining Table? Clearance in cm and Inches",
+title="How Much Space Around a Dining Table? (cm and Inches)",
 meta="How much room to leave around a dining table for chairs and walkways, how many seats fit a table, and how big a table a room can take.",
 h1="How Much Space Do You Need Around a Dining Table?",
 lede="A table that fits the room on paper can still leave nobody able to pull out a chair. Plan for the chairs, not just the table.",
@@ -964,7 +964,7 @@ def marquee_set(hidden):
 
 HOME_TITLE = "Scooch: Room and Floor Planner for iPhone. Will It Fit?"
 HOME_DESC = ("Draw your rooms at their real measurements, place furniture at real sizes, and see what "
-             "fits before you move anything heavy. A no-nonsense floor plan app for iPhone.")
+             "fits before you move anything heavy. A floor plan app for iPhone.")
 HOME_OG = "Draw the room, drop in the furniture at real size, and see what fits before anything heavy moves."
 STORE = store_url(CT_HOME)
 
@@ -1100,6 +1100,7 @@ home_ld = ld({
     "description": "Room and floor planner for iPhone. Draw rooms at their real measurements, place furniture at real sizes, and see what fits and what collides before you move anything.",
     "url": f"{DOMAIN}/",
     "downloadUrl": STORE_CANONICAL,
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
     "author": {"@type": "Person", "name": "Emils Ozols", "url": "https://ozols.dev"},
     "image": f"{DOMAIN}/assets/icon-512.png",
 }) + "\n" + faq_ld(HOME_FAQ)

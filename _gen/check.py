@@ -40,6 +40,7 @@ class Page(HTMLParser):
         self._skip = 0          # inside <script>/<style>: not visible copy
         self._ld = None
         self._in_title = False
+        self._svg = 0           # an <svg>'s <title> is its accessible name, not the page's
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -61,7 +62,9 @@ class Page(HTMLParser):
             self.desc = a.get("content", "")
         if tag == "h1":
             self.h1 += 1
-        if tag == "title":
+        if tag == "svg":
+            self._svg += 1
+        if tag == "title" and not self._svg:
             self._in_title = True
         if tag in ("script", "style"):
             self._skip += 1
@@ -83,6 +86,8 @@ class Page(HTMLParser):
             if self._ld is not None:
                 self.jsonld.append("".join(self._ld))
                 self._ld = None
+        if tag == "svg":
+            self._svg -= 1
         if tag == "title":
             self._in_title = False
 
@@ -127,8 +132,12 @@ def main():
             fails.append(f"{where}: {pg.h1} h1 elements")
         if not pg.title or not pg.desc:
             fails.append(f"{where}: missing title or description")
-        elif len(pg.desc) > 170:
-            fails.append(f"{where}: description {len(pg.desc)} chars")
+        elif rel != "/404.html":
+            # Google cuts titles past ~60 characters and descriptions past ~160
+            if len(pg.title) > 60:
+                fails.append(f"{where}: title {len(pg.title)} chars")
+            if not 70 <= len(pg.desc) <= 160:
+                fails.append(f"{where}: description {len(pg.desc)} chars")
         expected = DOMAIN + ("/404.html" if rel == "/404.html" else rel)
         if pg.canonical != expected:
             fails.append(f"{where}: canonical {pg.canonical} != {expected}")
