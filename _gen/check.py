@@ -7,9 +7,10 @@
 Checks: the calculator's maths tests pass (jsc); every internal link, script, anchor and image resolves; image width/height match the file;
 JSON-LD parses; one h1, a title, a description and a self-canonical per page; App Store
 links carry both pt and ct, and never sit beside a 'Coming soon' (ON_STORE is all or nothing); the sitemap lists exactly the pages; and the visible copy has
-no em or en dashes, no hype words from brand.md, and no named competitor outside /compare/,
+no em or en dashes, no hype words from brand.md, and no named competitor outside /compare/ (except as the text of a link into it),
 whose pages must carry the disclosure, the checked date and the compared versions instead.
 """
+import html
 import json
 import os
 import re
@@ -192,13 +193,19 @@ def main():
         if rel.startswith("/compare/"):
             # brand.md, decision 2026-10-20: a comparison page may name other apps, but only
             # with the disclosure, the date it was checked and the versions it compared.
-            for need, what in (("We make Scooch.", "disclosure"), ("checked on", "checked date"),
-                               ("version", "compared versions")):
-                if need not in copy:
+            for need, what in (("We make Scooch", "disclosure"), ("checked on", "checked date"),
+                               ("versions compared", "compared versions")):
+                if need.lower() not in copy.lower():
                     fails.append(f"{where}: comparison page without its {what} ('{need}')")
         else:
+            # Outside /compare/ a competitor's name may appear only as the text of a link INTO a
+            # comparison page (a guide pointing at "Scooch vs X", as alarmclockplanner.com does).
+            raw = open(target(rel), encoding="utf-8").read()
+            outside = copy
+            for linked in re.findall(r'<a href="/compare/[^"]*">([^<]*)</a>', raw):
+                outside = outside.replace(html.unescape(linked), "", 1)
             for name in COMPETITORS:
-                if re.search(r"\b" + re.escape(name) + r"\b", copy):
+                if re.search(r"\b" + re.escape(name) + r"\b", outside):
                     fails.append(f"{where}: names a competitor: {name}")
 
     # ON_STORE in build.py: either every download is a store link or every one reads

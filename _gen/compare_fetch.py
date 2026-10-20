@@ -4,8 +4,8 @@
     python3 _gen/compare_fetch.py            # writes _gen/compare_snapshot.json
 
 Per app: the iTunes lookup record (version, its release date, rating, size, languages, iOS,
-devices, description), the In-App Purchases list read off the US App Store page, and up to
-100 of the most recent US reviews from the public RSS feed. The pages are built from
+devices, description), the In-App Purchases list and the App Privacy categories read off the
+US App Store page, and up to 100 of the most recent US reviews from the public RSS feed. The pages are built from
 compare_data.py, which cites this file; re-run it, re-read what changed, and move CHECKED in
 compare_data.py on the same day. The feed is flaky (empty pages): every request retries.
 """
@@ -72,6 +72,18 @@ def in_app_purchases(app_id):
     return pairs
 
 
+PRIVACY = ("Data Used to Track You", "Data Linked to You", "Data Not Linked to You", "Data Not Collected")
+
+
+def privacy_label(app_id):
+    """The App Privacy card titles on the US page: which of Apple's four categories it declares."""
+    page = get(f"https://apps.apple.com/us/app/id{app_id}")
+    start = page.find("App Privacy")
+    end = page.find("Accessibility", start)
+    section = page[start:end if end > start else start + 60000]
+    return [c for c in PRIVACY if c in section]
+
+
 def reviews(app_id, pages=2):
     found = []
     for n in range(1, pages + 1):
@@ -121,6 +133,8 @@ def main():
     for key, app_id in APPS.items():
         r = lookup[app_id]
         iaps = in_app_purchases(app_id)
+        time.sleep(2)
+        privacy = privacy_label(app_id)
         revs = reviews(app_id)
         snapshot["apps"][key] = {
             "id": app_id,
@@ -138,6 +152,7 @@ def main():
             "ipad": any("iPad" in d for d in r["supportedDevices"]),
             "genre": r["primaryGenreName"],
             "in_app_purchases": iaps,
+            "privacy_label": privacy,
             "reviews": review_summary(revs),
         }
         raw["apps"][key] = {"description": r["description"],

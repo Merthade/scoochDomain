@@ -1,458 +1,561 @@
-"""The /compare/ pages' content: one dict per app, rendered into the combined page and the
-one-vs-one pages by build.py.
+"""Comparison pages: one dataset, rendered by build.py into /compare/ (the roundup) and
+/compare/scooch-vs-<key>/ (one page per competitor). Same shape and house rules as
+alarmclockplanner.com's /compare/ (AlarmPlanner website/_gen/compare_data.py, 2026-10-20).
 
-Rules (Holocron brand.md, decision 2026-10-20): every claim about another app comes from its
-US App Store listing (description, In-App Purchases list) or its public US reviews, as
-fetched on CHECKED by compare_fetch.py (facts and counts in compare_snapshot.json; listing and
-review texts in compare_raw.json, local only: this repo is public); reviews are paraphrased, never
-quoted at length; each page says who the other app suits better; Scooch's own limits are
-listed; only Scooch's screenshots are shown; no superlative the data does not support; only
-features in the live Scooch (1.0.2, checked against the shipped code: 37 catalogue pieces,
-26 themes, PNG/PDF export, iCloud sync between your own devices, iPhone and iPad, 16
-languages, iOS 26.0 or later).
+House rules (Holocron brand.md, decision 2026-10-20):
+- Every fact about another app comes from its US App Store listing, In-App Purchases list,
+  privacy label or public US reviews, and the page says when it was checked (CHECKED).
+  Re-check before changing a number, never from memory (compare_fetch.py re-takes the snapshot).
+- Review complaints are paraphrased and attributed to "recent reviews", never quoted at length.
+- Every page says who the other app suits better. We list our own cons.
+- Screenshots of other apps only when we captured them ourselves; none so far.
+- No "best rated": 5.0 from 2 US ratings is not comparable to 4.7 from 41,000. Tables show the
+  average only; counts stay in the snapshot.
+- "Not described on the listing" (a dash) where a listing is silent, never "No".
+- Only features in the LIVE Scooch: 1.0.2 (37 catalogue pieces, 26 themes, PNG/PDF export, iCloud
+  sync between your own devices, iPhone and iPad, 16 languages, iOS 26 or later).
 
-Version, update date, rating, size, languages and minimum iOS are NOT typed here: build.py
-reads them from the snapshot, so a re-fetch updates every page. Move CHECKED whenever the
-snapshot is re-taken and the text below has been re-read against it.
+Version, update date, rating and language count are NOT typed here: build.py reads them from
+compare_snapshot.json, so a re-fetch updates every page.
 """
 
-CHECKED = "2026-10-20"
-CHECKED_TEXT = "20 October 2026"
-OURS = "scooch"
+CHECKED = "20 October 2026"
+CHECKED_ISO = "2026-10-20"
+OUR_ONCE = 9.99   # the price every "cost for the first year" is held against
 
-# Row order of the one-vs-one "at a glance" table, and the combined table's capability columns.
-FIT = "Warns when furniture overlaps or sticks out of the room"
-SIZES = "Furniture at sizes you type"
-HOW = "How you make the plan"
-THREE_D = "3D view"
+# Scooch first (ours, and the page says so); the rest in order of their US rating count, a public
+# number, not our preference.
+APPS = [
+    dict(
+        key="scooch", short="Scooch", name="Scooch", developer="Emils Ozols", store_id="6799503727",
+        best_for="Checking that furniture fits a room before you buy or move it",
+        summary=("A 2D room planner built around one question: will it fit? You type or drag your rooms to "
+                 "their real measurements, place furniture at real sizes, and anything that overlaps another "
+                 "piece or sticks out of the room is highlighted before you lift it."),
+        pros=["Warns when furniture overlaps or sticks out of the room",
+              "Every piece resizes to the centimetre, and you can draw your own",
+              "$9.99 once: no subscription, no account",
+              "iPhone and iPad, synced through your own iCloud"],
+        cons=["Rooms are rectangles: no angled or curved walls",
+              "37 generic pieces: no brand catalogue or decor",
+              "Needs iOS 26 or later"],
+        price="Free download; planning needs the one-time unlock, $9.99",
+        once="Yes, $9.99", year=None,
+        fit="Yes, overlaps and pieces outside the room are highlighted",
+        sizes="Yes, to the centimetre, plus pieces you draw",
+        three_d="No", scan="No, you measure and type",
+        privacy="Yes, no data linked to you",
+        vs=False,
+    ),
+    dict(
+        key="home-design-3d", short="Home Design 3D", name="Home Design 3D", developer="Home Design 3D srl",
+        store_id="463768717",
+        best_for="Designing a whole house over several floors, in 3D",
+        summary=("A house designer: draw floor plans in 2D and walk through them in 3D, over unlimited floors, "
+                 "with thousands of items, photorealistic rendering, VR export and blueprint import. Premium "
+                 "features are a subscription."),
+        pros=["Multi-storey houses with adjustable walls",
+              "Thousands of items with sizes you can change",
+              "3D walkthrough, renders and VR export",
+              "Import a blueprint and trace it"],
+        cons=["Premium is a subscription",
+              "Recent reviews describe one-time purchases moved to subscriptions"],
+        price="Free download. Weekly premium $4.99, monthly plans $12.99 to $22.99, yearly plans $44.99 to $79.99",
+        once="No, subscription only", year="$44.99 to $79.99",
+        fit="Not described on the listing", sizes="Yes, per its listing",
+        three_d="Yes", scan="Not described on the listing",
+        privacy="No, declares data used to track you",
+        vs=True,
+    ),
+    dict(
+        key="keyplan-3d", short="Keyplan 3D", name="Keyplan 3D Lite", developer="Quasarts LLC", store_id="983655856",
+        best_for="Building a home's shape and decorating it in 2D and 3D",
+        summary=("A home builder and interior designer: draw walls in any shape, place furniture, windows and "
+                 "doors in 2D or 3D, and paint and decorate any surface. 350+ objects are free and projects "
+                 "sync through iCloud."),
+        pros=["Walls in any shape, in 2D or 3D",
+              "350+ free objects, paints and materials",
+              "A one-time $5.99 Standard upgrade",
+              "iCloud sync between iPhone and iPad"],
+        cons=["Recent reviews describe purchases needed for more rooms, floors and textures",
+              "Object packs are sold separately"],
+        price="Free download. Standard version $5.99 once; object packs $1.99 to $2.99",
+        once="Yes, $5.99", year=None,
+        fit="Not described on the listing", sizes="Not described on the listing",
+        three_d="Yes", scan="Not described on the listing",
+        privacy="Yes, but collects data linked to you",
+        vs=True,
+    ),
+    dict(
+        key="home-planner-ai", short="Home Planner AI", name="Home Planner AI", developer="Room Planner Ltd",
+        store_id="1076159017",
+        best_for="3D room design with a scanner, measure tools and renders",
+        summary=("A 2D and 3D design app with a built-in 3D scanner, a digital tape measure, AI design and "
+                 "realistic renders. Premium unlocks the full catalogue, unlimited projects, renders, the "
+                 "scanner and the measure tools."),
+        pros=["Built-in 3D scanner and measure tools",
+              "2D and 3D, with realistic renders",
+              "AI design suggestions",
+              "30 languages, the most here"],
+        cons=["Scanner, measure tools and full catalogue are premium",
+              "Ten different purchases make the real price hard to read"],
+        price=("Free download. Purchases from $5.99 to $74.99, 6-month plans at $29.99 and $34.99, "
+               "Weekly Business $17.99"),
+        once="Not stated on the listing", year="Not stated on the listing",
+        fit="Not described on the listing", sizes="Not described on the listing",
+        three_d="Yes", scan="Yes, built-in 3D scanner",
+        privacy="Yes, no data linked to you",
+        vs=True,
+    ),
+    dict(
+        key="planner-5d", short="Planner 5D", name="Planner 5D", developer="Planner5D, UAB", store_id="606173978",
+        best_for="3D interior design with a large furniture catalogue",
+        summary=("A 2D and 3D home design app with over 8,400 furniture and decor items with premium, "
+                 "photo-like renders, AI design and 3D capture with the phone's camera. The free version has "
+                 "150+ items and no furniture customization."),
+        pros=["2D and 3D, with photo-like renders",
+              "Over 8,400 items with premium",
+              "Camera capture and AI design",
+              "Apple Pencil and Vision Pro support"],
+        cons=["Resizing furniture needs premium",
+              "Recent reviews describe charges after free trials"],
+        price=("Free with limits. Subscriptions from $7.99 a week, $19.99 a month, $29.99 to $119.99 a year; "
+               "full catalogue $6.99 for 30 days or $15.99 a year"),
+        once="No, subscription only", year="$29.99 to $119.99",
+        fit="Not described on the listing",
+        sizes="Yes, with premium (its free version has no furniture customization)",
+        three_d="Yes", scan="Yes, with the camera",
+        privacy="No, declares data used to track you",
+        vs=True,
+    ),
+    dict(
+        key="magicplan", short="magicplan", name="magicplan", developer="Technologies magicplan Inc.",
+        store_id="427424432",
+        best_for="Professionals capturing existing rooms for reports and estimates",
+        summary=("A floor plan tool for remodelers, restoration and insurance claims work. You capture a room "
+                 "with the phone's camera, then add photos, notes, checklists, 360° panoramas, reports and "
+                 "estimates to the plan. Its listing names Xactimate and CoreLogic integrations."),
+        pros=["Builds the plan from the phone's camera",
+              "Photos, notes, forms and estimates on the plan",
+              "Xactimate and CoreLogic integrations"],
+        cons=["Priced for businesses: yearly plans from $129.99",
+              "Recent reviews describe scans that miss walls or closets"],
+        price=("Free download. Sketch Plan $12.99 a month or $129.99 a year, Report Plan $39.99 or $399.99, "
+               "Estimate Plan $89.99 or $899.99"),
+        once="No, subscription only", year="$129.99 to $899.99",
+        fit="Not described on the listing", sizes="Not described on the listing",
+        three_d="Not described on the listing", scan="Yes, with the camera",
+        privacy="Yes, but collects data linked to you",
+        vs=True,
+    ),
+    dict(
+        key="live-home-3d", short="Live Home 3D", name="Live Home 3D", developer="Belight Software, ltd",
+        store_id="1066784070",
+        best_for="Detailed 3D house and interior design with realistic renders",
+        summary=("A full home, interior and landscape design app: 2D plans, 3D walkthroughs, 5,000+ items and "
+                 "3,000+ materials, a LiDAR room scanner, AR, renders and video. Projects move between iPhone, "
+                 "iPad, Vision Pro, Mac and Windows."),
+        pros=["5,000+ items and 3,000+ materials",
+              "LiDAR room scan and AR",
+              "Renders, flyover videos and panoramas",
+              "Lifetime upgrades, and Mac and Windows versions"],
+        cons=["The free version watermarks exports and keeps one project",
+              "The lifetime Standard upgrade is $59.99"],
+        price=("Free version with watermarked exports and one project. Standard $5.99 a month, $19.99 a year or "
+               "$59.99 lifetime; Pro $14.99 a month, $39.99 a year or $129.99 lifetime"),
+        once="Yes, $59.99 lifetime", year="$19.99 to $39.99",
+        fit="Not described on the listing", sizes="Not described on the listing",
+        three_d="Yes", scan="Yes, with LiDAR",
+        privacy="Yes, no data linked to you",
+        vs=True,
+    ),
+    dict(
+        key="draft-paper", short="Draft Paper", name="Draft Paper", developer="Giles Goddard", store_id="911636555",
+        best_for="Quick, precise 2D drawings and DXF export",
+        summary=("A simple 2D drafting app: lines, rectangles, ellipses, text and measurements on up to 10 "
+                 "layers, exported as PDF, JPEG or DXF. Made by one developer, and $9.99 once, the same as "
+                 "Scooch."),
+        pros=["$9.99 once, no subscription",
+              "Exports PDF, JPEG and DXF",
+              "Layers and Apple Pencil support",
+              "Runs on iOS 15 or later"],
+        cons=["No furniture: you draw every shape yourself",
+              "English only"],
+        price="Free download. All Features $9.99 once",
+        once="Yes, $9.99", year=None,
+        fit="Not described on the listing", sizes="No, you draw shapes to scale",
+        three_d="No", scan="No",
+        privacy="Yes, no data linked to you",
+        vs=True,
+    ),
+    dict(
+        key="drawplan", short="DrawPlan", name="DrawPlan", developer="Fleet Investments LLC", store_id="1451755778",
+        best_for="To-scale 2D plans for trades and real estate, with tracing",
+        summary=("A 2D floor plan app for quick sketches or to-scale drawings with automatic dimensions. You can "
+                 "import an image or plan and trace it, save your own objects, and ask its AI to help draw. "
+                 "Premium is a subscription."),
+        pros=["Free sketching or to-scale drawing",
+              "Trace over an imported plan or photo",
+              "AI-assisted drawing",
+              "Runs on iOS 13 or later"],
+        cons=["Sync and clean exports need a subscription",
+              "Recent reviews describe paying to reopen saved plans"],
+        price=("Free download. $2.99 a month or $29.99 a year; Plus $4.99 or $49.99; Pro $9.99 or $99.99; "
+               "AI credits $4.99 to $19.99"),
+        once="No, subscription only", year="$29.99 to $99.99",
+        fit="Not described on the listing", sizes="Not described on the listing",
+        three_d="Not described on the listing", scan="Not described on the listing",
+        privacy="Yes, no data linked to you",
+        vs=True,
+    ),
+]
 
-APPS = {
-    "scooch": {
-        "name": "Scooch",
-        "developer": "Emils Ozols",
-        "best_for": "Checking that furniture fits a room before you buy or move it",
-        "how": "Type or drag the room's measurements, in 2D",
-        "sizes": "Yes: 37 pieces, any size to the centimetre, plus pieces you draw",
-        "fit": "Yes: overlaps and pieces outside the room are highlighted",
-        "three_d": "No",
-        "price": "Free download; $9.99 once to unlock planning",
-        "price_detail": [
-            "Free download. After the short intro, planning needs the one-time unlock: $9.99 (US).",
-            "No subscription, no account. The unlock works on your iPhone and iPad with the same Apple Account.",
-        ],
-        "summary": ("A 2D planner built around one question: will it fit? You type or drag your "
-                    "rooms to their real measurements, drop in furniture at real sizes, and "
-                    "anything that overlaps or sticks out of the room is highlighted before you "
-                    "lift it."),
-        "pros": [
-            "Flags furniture that overlaps another piece or sticks out of the room",
-            "Every piece resizes to the centimetre or inch you type, and you can draw your own",
-            "One-time $9.99, no subscription and no account",
-            "11 MB download; iPhone and iPad, synced through your own iCloud",
-            "26 colour themes and 16 languages",
-        ],
-        "cons": [
-            "No 3D view, no renders, no camera or LiDAR scan: you measure and type",
-            "Rooms are rectangles; L and U shapes are rooms joined together, no angled walls",
-            "37 generic pieces: no brand catalogue, materials or decor",
-            "Needs iOS 26 and an iPhone or iPad: no Mac, Android or web",
-            "Planning needs the $9.99 unlock; only 2 US ratings so far",
-        ],
-    },
+# Under the summary table. Each names whichever app the data says wins, not always us.
+PICKS = [
+    ("Lowest one-time price", "Keyplan 3D Lite, $5.99 for its Standard version; Scooch and Draft Paper are $9.99"),
+    ("Checks that furniture fits", "Scooch"),
+    ("For 3D design and renders", "Planner 5D or Live Home 3D"),
+    ("For scanning a room with the camera", "magicplan, Home Planner AI, or Live Home 3D with LiDAR"),
+    ("For drafting anything in 2D", "Draft Paper"),
+    ("For whole houses over several floors", "Home Design 3D"),
+]
 
-    "magicplan": {
-        "name": "magicplan",
-        "developer": "Technologies magicplan Inc.",
-        "best_for": "Professionals capturing existing rooms for reports and estimates",
-        "how": "Capture with the phone's camera, then edit",
-        "sizes": "Objects and equipment on the plan (sizing not described in the listing)",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Not mentioned in its listing",
-        "price": "Free download; plans from $12.99/month or $129.99/year",
-        "price_detail": [
-            "Sketch Plan $12.99 a month or $129.99 a year, Report Plan $39.99 a month or $399.99 a year, "
-            "Estimate Plan $89.99 a month or $899.99 a year (its US In-App Purchases list).",
-        ],
-        "summary": ("A floor plan tool for remodelers, restoration and insurance claims "
-                    "professionals: you capture a room with the phone's camera and add photos, "
-                    "notes, checklists, 360° panoramas, reports and estimates. Its listing names "
-                    "Xactimate and CoreLogic integrations."),
-        "pros": [
-            "Builds the floor plan from the phone's camera, no extra hardware",
-            "Photos, notes, forms, 360° panoramas, reports and estimates on the same plan",
-            "Integrates with Xactimate and CoreLogic, per its listing",
-            "4.7 stars from over 41,000 US ratings",
-        ],
-        "cons": [
-            "Priced for businesses: the cheapest yearly plan is $129.99",
-            "Its listing does not describe furniture fit checks",
-            "5 languages; a 347 MB download",
-        ],
-        "theirs_stronger": [
-            "It measures the room for you with the camera; Scooch needs you to measure and type.",
-            "It is a working tool for jobs: photos, notes, forms, panoramas, reports and estimates sit on the plan.",
-            "It connects to Xactimate and CoreLogic, which claims and restoration work relies on.",
-            "Far more ratings: 4.7 stars from over 41,000 in the US.",
-        ],
-        "ours_stronger": [
-            "It is built for furniture: 37 pieces at real sizes, resized to the centimetre, and your own drawn pieces.",
-            "It highlights furniture that overlaps or sticks out of the room; magicplan's listing does not describe this.",
-            "$9.99 once instead of a plan from $12.99 a month.",
-            "16 languages and an 11 MB download, against 5 languages and 347 MB.",
-        ],
-        "verdict_theirs": "you work in remodeling, restoration or insurance claims and need plans, photos and estimates from the camera",
-        "verdict_ours": "you are at home asking whether a sofa, bed or table will fit, and want a one-time price",
-        "review_themes": [
-            'Paying is the most common complaint: reviewers say scanning, more than one plan and even deleting a project need a subscription, and several found the pricing unclear before they started.',
-            'Several say scans missed closets, walls or doors, or struggled with open-plan rooms and sloped ceilings.',
-            'Several say a project did not save, or vanished after an update or an account change.',
-            'Several call it hard to get started with.',
-        ],
-        "review_praise": 'The positive reviews praise the scanning and how quickly a usable plan comes together, including for trades work.',
-    },
+# Our app in brief, for the "About Scooch" box on each head-to-head. Shipped (1.0.2) only.
+ABOUT_US = [
+    "Rooms drawn at their real measurements, joined into an L or a U",
+    "37 pieces at real sizes, each resized to the centimetre",
+    "Furniture you draw yourself, at any size",
+    "Overlaps and pieces outside the room highlighted",
+    "Door swings, drawers and sofa beds shown with the space they need",
+    "PNG and PDF export, metric or imperial, 26 themes",
+    "iPhone and iPad, synced through your own iCloud",
+]
 
-    "planner-5d": {
-        "name": "Planner 5D",
-        "developer": "Planner5D, UAB",
-        "best_for": "3D interior design with a large furniture catalogue",
-        "how": "Draw in 2D and switch to 3D; camera capture; AI design",
-        "sizes": "Premium only: its listing says the free version has no furniture customization",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Yes",
-        "price": "Free with limits; subscriptions from $7.99/week",
-        "price_detail": [
-            "Its US In-App Purchases list shows subscriptions from $7.99 a week and $19.99 a month to "
-            "$29.99, $69.99 and $119.99 a year, plus full-catalogue access at $6.99 for 30 days or $15.99 a year.",
-            "Its own listing text quotes $9.99 a month or $59.99 a year, and notes prices vary by region.",
-        ],
-        "summary": ("A 2D and 3D home design app with a catalogue of over 8,400 items, photo-like "
-                    "'Snapshot' renders, AI design generation and 3D capture with the phone's "
-                    "camera. The free version has 150+ items and no furniture customization; the "
-                    "rest is a subscription."),
-        "pros": [
-            "2D and 3D, with photo-like renders",
-            "Over 8,400 furniture and decor items with premium",
-            "Works across platforms and offline, per its listing; Apple Pencil and Vision Pro support",
-            "24 languages",
-        ],
-        "cons": [
-            "Changing furniture sizes needs premium",
-            "Subscription pricing, many tiers",
-            "A 980 MB download; its listing does not describe fit checks",
-        ],
-        "theirs_stronger": [
-            "It shows your room in 3D and renders photo-like images; Scooch is 2D only.",
-            "Its catalogue is far larger: over 8,400 items with premium, against Scooch's 37 generic pieces.",
-            "It runs on more platforms and supports Apple Pencil and Vision Pro, per its listing.",
-            "24 languages against Scooch's 16, and far more ratings (over 42,000 in the US).",
-        ],
-        "ours_stronger": [
-            "Every piece resizes to the centimetre with the $9.99 unlock; Planner 5D's free version has no furniture customization.",
-            "It highlights furniture that overlaps or sticks out of the room; Planner 5D's listing does not describe this.",
-            "One payment of $9.99 instead of a subscription.",
-            "An 11 MB download against 980 MB.",
-        ],
-        "verdict_theirs": "you want to see the room in 3D, style it from a big catalogue and render it",
-        "verdict_ours": "you need exact sizes and a clear answer on what fits, without a subscription",
-        "review_themes": [
-            'Billing is the most common complaint by far: many say a free trial turned into a charge they did not expect, and that refunds were hard to get.',
-            'Several say scans, downloads and other features each ask for another purchase.',
-            'Several call it confusing, slow or prone to freezing.',
-            'A few say saved projects reverted or partly disappeared.',
-        ],
-        "review_praise": 'The positive reviews praise it for interior design and the room scan.',
-    },
-
-    "home-planner-ai": {
-        "name": "Home Planner AI",
-        "developer": "Room Planner Ltd",
-        "best_for": "3D room design with a scanner, measure tools and renders",
-        "how": "Draw in 2D or 3D, or scan the room with the built-in 3D scanner",
-        "sizes": "Not described in its listing",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Yes",
-        "price": "Free download; purchases from $5.99, subscriptions from $17.99/week",
-        "price_detail": [
-            "Its US In-App Purchases list shows Interior Design $5.99, Floor plan creator from $6.99 to "
-            "$74.99, Architecture $14.99, Design & Room maker $49.99, 6-month subscriptions at $29.99 and "
-            "$34.99, and a Weekly Business plan at $17.99.",
-        ],
-        "summary": ("A 2D and 3D design app with a built-in 3D scanner, a digital tape measure, AI "
-                    "design and realistic renders. Premium unlocks the full catalogue, unlimited "
-                    "projects, renders and the scanner and measure tools."),
-        "pros": [
-            "Built-in 3D scanner and measure tools",
-            "2D and 3D, with realistic renders",
-            "30 languages, the most in this comparison",
-            "4.6 stars from over 46,000 US ratings",
-        ],
-        "cons": [
-            "Scanner, measure tools, full catalogue and unlimited projects are premium",
-            "Ten different purchases on its US list, which makes the real price hard to read",
-            "A 1.4 GB download; its listing does not describe fit checks",
-        ],
-        "theirs_stronger": [
-            "It can scan the room and measure it for you; with Scooch you measure and type.",
-            "It shows the room in 3D with realistic renders; Scooch is 2D only.",
-            "30 languages against Scooch's 16, and over 46,000 US ratings.",
-        ],
-        "ours_stronger": [
-            "It highlights furniture that overlaps or sticks out of the room; Home Planner AI's listing does not describe this.",
-            "One price, $9.99 once, against a list of ten purchases and subscriptions.",
-            "An 11 MB download against about 1.4 GB.",
-        ],
-        "verdict_theirs": "you want to scan the room and design it in 3D with renders",
-        "verdict_ours": "you want to check what fits at exact sizes, for one clear price",
-        "review_themes": [
-            "The free version is the most common complaint: several say it is too limited to use, including one reviewer who could not type a room's size without subscribing.",
-            'Several mention freezing, crashes and slow loading.',
-            'A few find it confusing or say the buttons are too small to select things, especially on iPad.',
-        ],
-        "review_praise": 'Over half of these reviews give five stars, mostly saying how much fun it is to design rooms.',
-    },
-
-    "home-design-3d": {
-        "name": "Home Design 3D",
-        "developer": "Home Design 3D srl",
-        "best_for": "Designing a whole house over several floors, in 3D",
-        "how": "Draw in 2D, view in 3D; import a blueprint and trace it",
-        "sizes": "Yes, per its listing (customize furniture size)",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Yes",
-        "price": "Subscriptions from $4.99/week",
-        "price_detail": [
-            "Its US In-App Purchases list shows Weekly premium $4.99, monthly plans $12.99 to $22.99, and "
-            "yearly plans from $44.99 to $79.99.",
-        ],
-        "summary": ("A house designer: draw floor plans in 2D and walk through them in 3D, over "
-                    "unlimited floors, with thousands of items, photorealistic rendering, VR "
-                    "export and blueprint import for tracing. Premium features are a subscription."),
-        "pros": [
-            "Multi-storey houses, walls with adjustable thickness, height and angles",
-            "Thousands of items, with furniture sizes you can change",
-            "3D walkthrough, photorealistic rendering, VR export",
-            "The most ratings in this comparison: over 104,000 in the US",
-        ],
-        "cons": [
-            "Premium is a subscription",
-            "A 987 MB download",
-            "Its listing does not describe fit checks",
-        ],
-        "theirs_stronger": [
-            "It designs whole houses: several floors, angled walls, a 3D walkthrough and VR export.",
-            "Thousands of items against Scooch's 37 generic pieces.",
-            "You can import a blueprint and draw over it.",
-            "18 languages against 16, and over 104,000 US ratings.",
-        ],
-        "ours_stronger": [
-            "It highlights furniture that overlaps or sticks out of the room; Home Design 3D's listing does not describe this.",
-            "$9.99 once instead of a subscription from $4.99 a week.",
-            "An 11 MB download against 987 MB.",
-        ],
-        "verdict_theirs": "you are planning a house or a renovation over several floors and want to see it in 3D",
-        "verdict_ours": "you have the room already and want to know whether the furniture fits",
-        "review_themes": [
-            'The move to subscriptions is the most common complaint: many long-time users who bought the one-time Gold edition or content packs say they lost access after updates and are now asked to subscribe.',
-            'Several say most items and tools are locked, and that ads interrupt projects.',
-            'Several mention crashes after recent updates, including projects that no longer open.',
-        ],
-        "review_praise": 'The positive reviews praise it as an enjoyable way to design houses.',
-    },
-
-    "keyplan-3d": {
-        "name": "Keyplan 3D Lite",
-        "developer": "Quasarts LLC",
-        "best_for": "Building a home's shape and decorating it in 2D and 3D",
-        "how": "Draw walls like pencil lines, any shape; edit in 2D or 3D",
-        "sizes": "Not described in its listing",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Yes",
-        "price": "Free download; Standard version $5.99 once",
-        "price_detail": [
-            "Its US In-App Purchases list shows the Standard version at $5.99 and object packs from $1.99 "
-            "to $2.99 (a $23.90 Starter Pack is also featured on the page).",
-        ],
-        "summary": ("A home builder and interior designer: draw walls in any shape, then place "
-                    "furniture, windows and doors in 2D or 3D, and paint and decorate any surface. "
-                    "350+ objects are free and the projects sync through iCloud."),
-        "pros": [
-            "Walls in any shape, edited in 2D or 3D",
-            "350+ free objects, plus paints and materials",
-            "A one-time Standard upgrade at $5.99, lower than Scooch's $9.99",
-            "iCloud sync between iPhone and iPad",
-        ],
-        "cons": [
-            "Extra objects come as paid packs",
-            "Its listing does not describe fit checks",
-            "A 663 MB download; last updated in August 2026",
-        ],
-        "theirs_stronger": [
-            "Walls can take any shape; Scooch's rooms are rectangles you join.",
-            "It shows the plan in 3D and lets you paint and decorate surfaces.",
-            "Its one-time Standard upgrade is $5.99, cheaper than Scooch's $9.99.",
-            "Over 52,000 US ratings.",
-        ],
-        "ours_stronger": [
-            "It highlights furniture that overlaps or sticks out of the room; Keyplan's listing does not describe this.",
-            "Every piece resizes to the centimetre you type, and you can draw your own pieces.",
-            "16 languages against 10, and an 11 MB download against 663 MB.",
-        ],
-        "verdict_theirs": "you want to build a home's shape freely and decorate it in 3D, at a low one-time price",
-        "verdict_ours": "you want exact furniture sizes and a warning when something does not fit",
-        "review_themes": [
-            'The limits of the Lite version are the most common complaint: several say more rooms, floors or paint textures need a purchase.',
-            'A few mention plans lost when moving to a new phone, or that sizing spaces precisely is hard.',
-        ],
-        "review_praise": 'Most of these reviews are positive, calling it easy to use and worth the money.',
-    },
-
-    "live-home-3d": {
-        "name": "Live Home 3D",
-        "developer": "Belight Software, ltd",
-        "best_for": "Detailed 3D house and interior design with realistic renders",
-        "how": "Draw 2D plans, walk through in 3D; LiDAR room scan; AR",
-        "sizes": "Not described in its listing",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Yes",
-        "price": "Free version with limits; Standard from $5.99/month or $59.99 once",
-        "price_detail": [
-            "Standard Features: $5.99 a month, $19.99 a year or $59.99 lifetime. Pro Features: $14.99 a "
-            "month, $39.99 a year or $129.99 lifetime. Content packs at $5.99 (its US In-App Purchases list).",
-            "Per its listing, the free version watermarks exports and allows one project at a time.",
-        ],
-        "summary": ("A full home, interior and landscape design app: 2D plans, 3D walkthroughs, "
-                    "5,000+ items and 3,000+ materials, a LiDAR room scanner, AR, realistic "
-                    "renders and video. Projects move between iOS, iPadOS, visionOS, macOS and "
-                    "Windows."),
-        "pros": [
-            "5,000+ items and 3,000+ materials, plus imports from 3D Warehouse and Sketchfab",
-            "LiDAR room scanning and AR, per its listing",
-            "Renders, flyover videos and 360° panoramas",
-            "Lifetime purchase options, and Mac and Windows versions",
-        ],
-        "cons": [
-            "Free version watermarks exports and keeps one project at a time",
-            "Its listing does not describe fit checks",
-            "A 554 MB download",
-        ],
-        "theirs_stronger": [
-            "It is a full 3D design tool: walkthroughs, renders, video, roofs, terrain and lighting.",
-            "It can scan a room with LiDAR (on devices that have it); Scooch needs you to measure.",
-            "5,000+ items and 3,000+ materials, and it runs on Mac and Windows too.",
-            "Over 19,000 US ratings.",
-        ],
-        "ours_stronger": [
-            "It highlights furniture that overlaps or sticks out of the room; Live Home 3D's listing does not describe this.",
-            "Everything in Scooch is $9.99 once; Live Home 3D's lifetime Standard upgrade is $59.99.",
-            "16 languages against 11, and an 11 MB download against 554 MB.",
-        ],
-        "verdict_theirs": "you want detailed 3D design, renders and video, on Apple devices and Windows",
-        "verdict_ours": "you only need to know whether your furniture fits, for $9.99",
-        "review_themes": [
-            'A few say they were locked out of their one free project until they paid.',
-            'A few mention purchases or projects not carrying across devices, crashes on large models and slow loading.',
-            'A few say it does not explain where to start.',
-        ],
-        "review_praise": 'Most of these reviews are positive, praising the results and calling it quick to learn.',
-    },
-
-    "draft-paper": {
-        "name": "Draft Paper",
-        "developer": "Giles Goddard",
-        "best_for": "Quick, precise 2D drawings and DXF export",
-        "how": "Draw lines, rectangles and text on layers",
-        "sizes": "No furniture catalogue: you draw shapes to scale",
-        "fit": "Not mentioned in its listing",
-        "three_d": "No",
-        "price": "Free download; All Features $9.99 once",
-        "price_detail": [
-            "All Features: $9.99, one time (its US In-App Purchases list).",
-        ],
-        "summary": ("A simple 2D drafting app: lines, rectangles, ellipses, text and measurements on "
-                    "up to 10 layers, exported as PDF, JPEG or DXF. It is made by one developer "
-                    "and costs $9.99 once, the same as Scooch."),
-        "pros": [
-            "Same one-time $9.99, no subscription",
-            "A 2 MB download, the smallest here, and runs on iOS 15",
-            "Exports PDF, JPEG and DXF for CAD software",
-            "Layers, Apple Pencil support, unlimited undo",
-        ],
-        "cons": [
-            "No furniture: rooms and pieces are shapes you draw",
-            "Its listing does not describe fit checks",
-            "English only",
-        ],
-        "theirs_stronger": [
-            "It draws anything, not only rooms and furniture, on up to 10 layers.",
-            "It exports DXF, so the drawing opens in CAD software.",
-            "It runs on iOS 15 or later; Scooch needs iOS 26.",
-            "A 2 MB download, and over 15,000 US ratings.",
-        ],
-        "ours_stronger": [
-            "Furniture is ready made: 37 pieces at real sizes, resized to the centimetre, instead of shapes you draw.",
-            "It highlights furniture that overlaps or sticks out of the room.",
-            "16 languages against English only.",
-        ],
-        "verdict_theirs": "you want a general drafting tool with layers and DXF export",
-        "verdict_ours": "you want rooms and furniture that already know their sizes and warn you when they do not fit",
-        "review_themes": [
-            'Several long-time users say a recent update (1.19.5) changed scrolling and undo and made drawing harder.',
-            'Several mention crashes, some losing minutes of work, including with Apple Pencil on iPad.',
-            'Several could not switch between metric and imperial, or import an image.',
-        ],
-        "review_praise": 'The positive reviews call it simple, flexible and good enough for daily work.',
-    },
-
-    "drawplan": {
-        "name": "DrawPlan",
-        "developer": "Fleet Investments LLC",
-        "best_for": "To-scale 2D plans for trades and real estate, with tracing",
-        "how": "Sketch freely or draw to scale; trace imported plans; AI help",
-        "sizes": "Furniture objects and your own saved objects (sizing not described)",
-        "fit": "Not mentioned in its listing",
-        "three_d": "Not mentioned in its listing",
-        "price": "Subscriptions from $2.99/month",
-        "price_detail": [
-            "DrawPlan $2.99 a month or $29.99 a year, Plus $4.99 a month or $49.99 a year, Pro $9.99 a month "
-            "or $99.99 a year, AI Credits $4.99 to $19.99 (its US In-App Purchases list).",
-            "Per its listing, premium is needed for cloud sync, high-resolution exports and exports without grids or watermarks.",
-        ],
-        "summary": ("A 2D floor plan app for quick sketches or to-scale drawings with automatic "
-                    "dimensions. You can import an image or plan and trace it, save your own "
-                    "objects, and ask its AI to help draw. Premium is a subscription."),
-        "pros": [
-            "Sketch freely or draw to scale with automatic dimensions",
-            "Import a plan or photo and trace over it",
-            "AI-assisted drawing and custom objects",
-            "Runs on iOS 13 or later",
-        ],
-        "cons": [
-            "Subscription for sync, high-resolution exports and clean exports",
-            "3.5 stars from about 5,300 US ratings",
-            "English only; its listing does not describe fit checks",
-        ],
-        "theirs_stronger": [
-            "You can import a plan or photo and trace it.",
-            "AI can help draw the plan, and it supports free sketching as well as to-scale drawing.",
-            "It runs on iOS 13 or later; Scooch needs iOS 26.",
-        ],
-        "ours_stronger": [
-            "It highlights furniture that overlaps or sticks out of the room; DrawPlan's listing does not describe this.",
-            "$9.99 once, with PNG and PDF export and iCloud sync included, instead of a subscription.",
-            "16 languages against English only.",
-        ],
-        "verdict_theirs": "you draw plans for work and want to trace existing drawings",
-        "verdict_ours": "you are furnishing your own home and want to know what fits",
-        "review_themes": [
-            'Paying to reopen your own plan is the most common complaint by far: many reviewers drew and saved a plan, then found they had to subscribe to open it again.',
-            'Several say saved plans would not open or disappeared after an update.',
-            'Several say they could not enter exact wall lengths or keep the plan to scale.',
-        ],
-        "review_praise": 'The positive reviews call it straightforward for a quick plan.',
-    },
+# Our screenshot on each head-to-head and on our roundup card: (file stem, alt text).
+OUR_SHOT = {
+    "scooch": ("shot-clash", "A 360 cm sofa flagged red in Scooch because it does not fit the room"),
+    "magicplan": ("shot-plan", "A two-room flat drawn to scale in Scooch, every wall measured"),
+    "planner-5d": ("shot-clash", "A 360 cm sofa flagged red in Scooch because it does not fit the room"),
+    "home-planner-ai": ("shot-furniture", "The Scooch furniture list with each piece's default size"),
+    "home-design-3d": ("shot-projections", "Furniture doors, drawers and a sofa bed showing the space they need in Scooch"),
+    "keyplan-3d": ("shot-clash", "A 360 cm sofa flagged red in Scooch because it does not fit the room"),
+    "live-home-3d": ("shot-projections", "Furniture doors, drawers and a sofa bed showing the space they need in Scooch"),
+    "draft-paper": ("shot-draw", "Drawing a dining table at 140 by 90 cm in Scooch"),
+    "drawplan": ("shot-plans", "Three plans in Scooch: a flat, a studio and an office"),
 }
 
-# Combined-page order: Scooch first (disclosed), then by US rating count, so the order
-# follows a public number rather than our preference.
-ORDER = ["scooch", "home-design-3d", "keyplan-3d", "home-planner-ai", "planner-5d",
-         "magicplan", "live-home-3d", "draft-paper", "drawplan"]
+_NO_FIT = ("Its US App Store listing does not describe that, as of 20 October 2026. Scooch highlights any "
+           "piece that overlaps another or sticks out of the room.")
+
+# One page per competitor. Sections render in a fixed order (see build.py): quick answer, table,
+# where they are stronger, where we are stronger, about us, what we do not do, what reviews
+# mention, pricing, questions. Write the "they are stronger" part first and mean it.
+VERSUS = {
+"home-design-3d": dict(
+    title="Home Design 3D Alternative (2026): Home Design 3D vs Scooch",
+    meta=("Looking for a Home Design 3D alternative without a subscription? Scooch checks what fits at exact "
+          "sizes for $9.99 once. Side by side, October 2026."),
+    h1="Home Design 3D alternative: Home Design 3D vs Scooch",
+    label="Scooch vs Home Design 3D",
+    lede=("Home Design 3D plans whole houses in 3D. Scooch is for the room you already have, and whether the "
+          "furniture you want fits in it."),
+    pick_them="you are planning a house or a renovation over several floors and want to see it in 3D.",
+    pick_us="you have the room already and want to know whether the furniture fits, for one price.",
+    them_stronger=[
+        ("Whole houses", "Several floors, adjustable wall thickness, height and angles, roofs, and a 3D walkthrough with VR export."),
+        ("Thousands of items", "Far more than Scooch's 37 generic pieces, with sizes you can change, per its listing."),
+        ("Blueprints", "Import an existing plan and draw over it."),
+    ],
+    us_stronger=[
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. Home Design 3D's listing does not describe this."),
+        ("One price", "$9.99 once. Home Design 3D is a subscription, and recent reviews describe earlier one-time purchases moving to it."),
+        ("No tracking", "Home Design 3D's App Store privacy label declares data used to track you; Scooch's declares none."),
+    ],
+    reviews=[
+        "long-time users who bought the one-time Gold edition or content packs and lost access after the move to subscriptions",
+        "most items and tools locked, and ads that interrupt projects",
+        "crashes after recent updates, including projects that no longer open",
+    ],
+    pricing=("Home Design 3D is free to download; premium is a subscription at $4.99 a week, $12.99 to $22.99 a "
+             "month or $44.99 to $79.99 a year (US). Scooch is a free download; planning needs a one-time $9.99 unlock."),
+    faq=[
+        ("Does Scooch do several floors or 3D?", "No. Scooch plans rooms in 2D. You can keep several plans, but not floors stacked in 3D."),
+        ("Does Home Design 3D warn when furniture will not fit?", _NO_FIT),
+        ("Is either a one-time purchase?", "Scooch is: $9.99 once. Home Design 3D's US purchase list shows only weekly, monthly and yearly plans."),
+    ],
+),
+"keyplan-3d": dict(
+    title="Keyplan 3D Alternative (2026): Keyplan 3D Lite vs Scooch",
+    meta=("Looking for a Keyplan 3D alternative? Scooch checks what fits at exact sizes and warns when it does "
+          "not. Side by side, checked October 2026."),
+    h1="Keyplan 3D alternative: Keyplan 3D Lite vs Scooch",
+    label="Scooch vs Keyplan 3D Lite",
+    lede=("Keyplan 3D builds a home's shape and decorates it in 3D, at a low one-time price. Scooch stays in 2D "
+          "and checks whether furniture at real sizes fits."),
+    pick_them="you want to build a home's shape freely and decorate it in 3D, at the lowest one-time price here.",
+    pick_us="you want exact furniture sizes and a warning when something does not fit.",
+    them_stronger=[
+        ("Any shape", "Walls go wherever you draw them; Scooch's rooms are rectangles you join into an L or a U."),
+        ("3D and decoration", "Edit in 3D and paint or texture any surface."),
+        ("Price", "Its Standard version is $5.99 once, less than Scooch's $9.99."),
+    ],
+    us_stronger=[
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. Keyplan's listing does not describe this."),
+        ("Exact furniture sizes", "Every piece resizes to the centimetre, and you can draw your own pieces at any size."),
+        ("Languages", "16 languages to Keyplan's 10."),
+    ],
+    reviews=[
+        "the Lite version asking for purchases to add more rooms, floors or paint textures",
+        "plans lost when moving to a new phone",
+        "spaces that are hard to size precisely",
+    ],
+    pricing=("Keyplan 3D Lite is free to download; its Standard version is $5.99 once and object packs cost $1.99 "
+             "to $2.99 each (US). Scooch is a free download; planning needs a one-time $9.99 unlock. Neither has a subscription."),
+    faq=[
+        ("Which is cheaper?", "Keyplan 3D Lite: its Standard version is $5.99 once, against Scooch's $9.99. Neither has a subscription."),
+        ("Does Keyplan 3D warn when furniture will not fit?", _NO_FIT),
+        ("Can Scooch draw angled walls?", "No. Scooch rooms are rectangles; you build an L or a U by joining rooms."),
+    ],
+),
+"home-planner-ai": dict(
+    title="Home Planner AI Alternative (2026): Scooch Compared",
+    meta=("Looking for a Home Planner AI alternative? Scooch checks what fits at exact sizes for one price, "
+          "$9.99 once. Side by side, October 2026."),
+    h1="Home Planner AI alternative: Home Planner AI vs Scooch",
+    label="Scooch vs Home Planner AI",
+    lede=("Home Planner AI scans and designs rooms in 3D. Scooch skips the scan and the 3D, and checks whether "
+          "furniture at real sizes fits the room you measured."),
+    pick_them="you want to scan a room and design it in 3D with renders.",
+    pick_us="you want to check what fits at exact sizes, for one clear price.",
+    them_stronger=[
+        ("It scans and measures", "A built-in 3D scanner and a digital tape measure. With Scooch you measure the room yourself."),
+        ("3D and renders", "Layouts in 2D and 3D with realistic renders; Scooch is 2D only."),
+        ("Languages", "30 languages, the most of any app compared here; Scooch has 16."),
+    ],
+    us_stronger=[
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. Home Planner AI's listing does not describe this."),
+        ("Typed sizes from the start", "Rooms and furniture take the exact size you type. A recent Home Planner AI review says typing a room's size needed the subscription."),
+        ("One clear price", "$9.99 once, against a purchase list of ten items and subscriptions."),
+    ],
+    reviews=[
+        "a free version too limited to use, including typing a room's size",
+        "freezing, crashes and slow loading",
+        "controls that are confusing or too small to select, especially on iPad",
+        "a subscription that was hard to cancel",
+    ],
+    pricing=("Home Planner AI is free to download; its US purchase list shows Interior Design $5.99, Floor plan "
+             "creator from $6.99 to $74.99, Architecture $14.99, Design & Room maker $49.99, 6-month subscriptions "
+             "at $29.99 and $34.99, and Weekly Business at $17.99, without saying which are one-time. Scooch is a "
+             "free download; planning needs a one-time $9.99 unlock."),
+    faq=[
+        ("Can Scooch scan a room?", "No. You measure the room and type or drag its size. Home Planner AI has a built-in 3D scanner."),
+        ("Does Home Planner AI warn when furniture will not fit?", _NO_FIT),
+        ("How much does each cost?", "Scooch: $9.99 once. Home Planner AI lists purchases from $5.99 to $74.99 and subscriptions; see Pricing above."),
+    ],
+),
+"planner-5d": dict(
+    title="Planner 5D Alternative (2026): Planner 5D vs Scooch",
+    meta=("Looking for a Planner 5D alternative? Scooch checks what fits at exact sizes, for $9.99 once with no "
+          "subscription. Side by side, October 2026."),
+    h1="Planner 5D alternative: Planner 5D vs Scooch",
+    label="Scooch vs Planner 5D",
+    lede=("Planner 5D is about seeing a room in 3D and styling it from a big catalogue. Scooch is 2D and answers "
+          "one practical question: does the furniture fit?"),
+    pick_them="you want to see the room in 3D, furnish it from thousands of items and render it.",
+    pick_us="you need exact sizes and a clear answer on what fits, without a subscription.",
+    them_stronger=[
+        ("3D and renders", "Planner 5D switches between 2D and 3D and renders photo-like images. Scooch is 2D only."),
+        ("A huge catalogue", "Over 8,400 furniture and decor items with premium, against Scooch's 37 generic pieces."),
+        ("Camera capture and AI", "It can capture a room in 3D with the phone's camera and generate designs with AI."),
+        ("More platforms and languages", "It runs across platforms and on Vision Pro, in 24 languages to Scooch's 16."),
+    ],
+    us_stronger=[
+        ("Exact sizes without a subscription", "Every Scooch piece resizes to the centimetre with the one-time unlock. Planner 5D's listing says its free version has no furniture customization."),
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. Planner 5D's listing does not describe this."),
+        ("One price", "$9.99 once, against subscriptions from $7.99 a week."),
+        ("No tracking", "Planner 5D's App Store privacy label declares data used to track you; Scooch's declares none."),
+    ],
+    reviews=[
+        "free trials that turned into charges reviewers did not expect, and refunds that were hard to get",
+        "scans, downloads and other features that each ask for another purchase",
+        "an app that feels confusing, slow or prone to freezing",
+        "saved projects that reverted or partly disappeared",
+    ],
+    pricing=("Planner 5D is free with a limited catalogue; its US purchase list shows subscriptions from $7.99 a "
+             "week and $19.99 a month to $29.99, $69.99 and $119.99 a year, plus full-catalogue access at $6.99 for "
+             "30 days or $15.99 a year. Scooch is a free download; planning needs a one-time $9.99 unlock."),
+    faq=[
+        ("Is Planner 5D free?", "It is free to download with 150+ items and no furniture customization, per its listing; the full catalogue and resizing need a subscription."),
+        ("Does Scooch work in 3D?", "No. Scooch is 2D. It shows real sizes, door swings and the space drawers and sofa beds need, but not a 3D view."),
+        ("Which one tells me if a sofa will fit?", "Scooch highlights furniture that overlaps or sticks out of the room. Planner 5D's listing does not describe a check like that."),
+    ],
+),
+"magicplan": dict(
+    title="magicplan Alternative (2026): magicplan vs Scooch",
+    meta=("Looking for a magicplan alternative for furniture? Scooch checks what fits at exact sizes for $9.99 "
+          "once. Side by side, checked October 2026."),
+    h1="magicplan alternative: magicplan vs Scooch",
+    label="Scooch vs magicplan",
+    lede=("magicplan measures rooms with the camera and turns them into plans, photos and estimates for jobs. "
+          "Scooch starts from measurements you type and answers a narrower question: does the furniture fit?"),
+    pick_them="you work in remodeling, restoration or insurance claims and need plans, photos and estimates from the camera.",
+    pick_us="you are at home asking whether a sofa, bed or table will fit, and want one price instead of a plan.",
+    them_stronger=[
+        ("It measures for you", "magicplan builds the floor plan from the phone's camera. With Scooch you measure the room and type its size."),
+        ("Made for jobs", "Photos, notes, forms, 360° panoramas, reports and estimates sit on the plan, and it connects to Xactimate and CoreLogic."),
+        ("A long track record", "Years on the App Store and far more ratings than Scooch, which is new."),
+    ],
+    us_stronger=[
+        ("Furniture that knows its size", "37 pieces at real sizes, each resized to the centimetre, plus pieces you draw yourself."),
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. magicplan's listing does not describe this."),
+        ("Price", "$9.99 once, against magicplan's plans from $12.99 a month or $129.99 a year."),
+        ("Languages", "Scooch is in 16 languages; magicplan's listing names 5."),
+    ],
+    reviews=[
+        "core features, extra plans and scanning that need a subscription, with pricing some found unclear",
+        "scans that miss closets, walls or doors, or struggle with open-plan rooms and sloped ceilings",
+        "projects that did not save, or disappeared after an update or an account change",
+        "a steep learning curve for first-time users",
+    ],
+    pricing=("magicplan is free to download; its plans are Sketch at $12.99 a month or $129.99 a year, Report at "
+             "$39.99 or $399.99, and Estimate at $89.99 or $899.99 (US). Scooch is a free download; planning needs "
+             "a one-time $9.99 unlock, with no subscription."),
+    faq=[
+        ("Can Scooch scan a room like magicplan?", "No. Scooch has no camera or LiDAR scan: you measure the room and type or drag its size."),
+        ("Does magicplan warn when furniture will not fit?", _NO_FIT),
+        ("Which is cheaper?", "Scooch: $9.99 once. magicplan's plans start at $12.99 a month or $129.99 a year."),
+    ],
+),
+"live-home-3d": dict(
+    title="Live Home 3D Alternative (2026): Live Home 3D vs Scooch",
+    meta=("Looking for a simpler Live Home 3D alternative? Scooch checks what fits at exact sizes for $9.99 once. "
+          "Side by side, checked October 2026."),
+    h1="Live Home 3D alternative: Live Home 3D vs Scooch",
+    label="Scooch vs Live Home 3D",
+    lede=("Live Home 3D is a full 3D design tool, from roofs to lighting. Scooch does one part of that job, "
+          "checking whether furniture fits, for less."),
+    pick_them="you want detailed 3D design, renders and video, on Apple devices and Windows.",
+    pick_us="you only need to know whether your furniture fits, for $9.99 once.",
+    them_stronger=[
+        ("Full 3D design", "Walkthroughs, renders, flyover videos, roofs, terrain and lighting."),
+        ("Scanning", "A LiDAR room scanner on devices that have the sensor; with Scooch you measure."),
+        ("Catalogue and platforms", "5,000+ items and 3,000+ materials, and versions for Mac and Windows."),
+    ],
+    us_stronger=[
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. Live Home 3D's listing does not describe this."),
+        ("Price", "Everything in Scooch is $9.99 once; Live Home 3D's Standard upgrade is $19.99 a year or $59.99 lifetime."),
+        ("Languages", "16 languages to Live Home 3D's 11."),
+    ],
+    reviews=[
+        "the one free project locked until paying",
+        "purchases or projects not carrying across devices",
+        "crashes on large models and slow loading",
+        "little guidance on where to start",
+    ],
+    pricing=("Live Home 3D has a free version that watermarks exports and keeps one project at a time. Standard is "
+             "$5.99 a month, $19.99 a year or $59.99 lifetime; Pro is $14.99 a month, $39.99 a year or $129.99 "
+             "lifetime (US). Scooch is a free download; planning needs a one-time $9.99 unlock."),
+    faq=[
+        ("Is Live Home 3D free?", "There is a free version; per its listing, exports carry a watermark and only one project can be used at a time."),
+        ("Can Scooch scan with LiDAR?", "No. You measure the room and type or drag its size."),
+        ("Does Live Home 3D warn when furniture will not fit?", _NO_FIT),
+    ],
+),
+"draft-paper": dict(
+    title="Draft Paper Alternative (2026): Draft Paper vs Scooch",
+    meta=("Looking for a Draft Paper alternative for furniture? Scooch has furniture at real sizes and warns "
+          "when it does not fit. Same $9.99 once."),
+    h1="Draft Paper alternative: Draft Paper vs Scooch",
+    label="Scooch vs Draft Paper",
+    lede=("Draft Paper and Scooch cost the same, $9.99 once, and both draw to scale. Draft Paper draws anything; "
+          "Scooch knows what a room and a sofa are."),
+    pick_them="you want a general drafting tool with layers and DXF export, on an older iPhone too.",
+    pick_us="you want rooms and furniture that already know their sizes, and a warning when they do not fit.",
+    them_stronger=[
+        ("It draws anything", "Lines, shapes, text and measurements on up to 10 layers, not only rooms and furniture."),
+        ("CAD export", "It exports DXF, so the drawing opens in CAD software."),
+        ("Older iPhones", "It runs on iOS 15 or later; Scooch needs iOS 26."),
+    ],
+    us_stronger=[
+        ("Furniture, ready made", "37 pieces at real sizes, each resized to the centimetre, instead of shapes you draw."),
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room."),
+        ("Languages", "16 languages; Draft Paper's listing names English only."),
+    ],
+    reviews=[
+        "a recent update (1.19.5) that changed scrolling and undo and made drawing harder",
+        "crashes that lose minutes of work, including with Apple Pencil on iPad",
+        "trouble switching between metric and imperial, or importing an image",
+    ],
+    pricing=("Draft Paper is free to download; All Features is $9.99 once (US). Scooch is a free download; "
+             "planning needs a one-time $9.99 unlock. Neither has a subscription."),
+    faq=[
+        ("Do they cost the same?", "Yes: both are $9.99 once in the US, with no subscription."),
+        ("Does Draft Paper have furniture?", "Its listing describes drawing tools (lines, rectangles, ellipses, text, measurements), not a furniture catalogue."),
+        ("Can Scooch export DXF?", "No. Scooch exports PNG and PDF."),
+    ],
+),
+"drawplan": dict(
+    title="DrawPlan Alternative (2026): DrawPlan vs Scooch",
+    meta=("Looking for a DrawPlan alternative without a subscription? Scooch keeps your plans and checks what "
+          "fits, for $9.99 once. October 2026."),
+    h1="DrawPlan alternative: DrawPlan vs Scooch",
+    label="Scooch vs DrawPlan",
+    lede=("DrawPlan is a 2D drawing tool for plans at work, with tracing and AI help. Scooch is a 2D planner for "
+          "furnishing your own rooms."),
+    pick_them="you draw plans for work and want to trace existing drawings.",
+    pick_us="you are furnishing your own home and want to know what fits, without a subscription.",
+    them_stronger=[
+        ("Tracing", "Import a plan or photo and draw over it."),
+        ("Drawing help", "Free sketching or to-scale drawing, plus AI that helps lay out the plan."),
+        ("Older iPhones", "It runs on iOS 13 or later; Scooch needs iOS 26."),
+    ],
+    us_stronger=[
+        ("A warning before you lift anything", "Scooch highlights a piece that overlaps another or sticks out of the room. DrawPlan's listing does not describe this."),
+        ("Your plans stay yours", "After the one-time unlock every plan opens, exports as PNG or PDF and syncs through your own iCloud. DrawPlan's listing puts sync and clean exports behind a subscription."),
+        ("Languages", "16 languages; DrawPlan's listing names English only."),
+    ],
+    reviews=[
+        "having to subscribe to open a plan they had already drawn and saved",
+        "saved plans that would not open or disappeared after an update",
+        "no way to enter exact wall lengths or keep the plan to scale",
+    ],
+    pricing=("DrawPlan is free to download; its plans are $2.99 a month or $29.99 a year, Plus $4.99 or $49.99, "
+             "and Pro $9.99 or $99.99, with AI credits from $4.99 to $19.99 (US). Scooch is a free download; "
+             "planning needs a one-time $9.99 unlock."),
+    faq=[
+        ("Is DrawPlan free?", "It is a free download; per its listing, cloud sync, high-resolution exports and exports without grids or watermarks need a subscription, from $2.99 a month or $29.99 a year (US)."),
+        ("Can Scooch trace a plan I already have?", "No. Scooch has no image import; you type or drag the room's measurements."),
+        ("Does DrawPlan warn when furniture will not fit?", _NO_FIT),
+    ],
+),
+}
+
+ROUNDUP_FAQ = [
+    ("Which room planner app for iPhone is best?",
+     "It depends on the job. To check that furniture fits, Scooch (our app). For 3D design and renders, Planner 5D "
+     "or Live Home 3D. To scan a room for work, magicplan. For whole houses over several floors, Home Design 3D."),
+    ("Which room planner apps have no subscription?",
+     "From this list: Scooch and Draft Paper ($9.99 once) and Keyplan 3D Lite ($5.99 once for its Standard version). "
+     "Live Home 3D sells lifetime upgrades as well as subscriptions."),
+    ("Which app tells me if my furniture will fit?",
+     "Scooch highlights furniture that overlaps another piece or sticks out of the room. As of 20 October 2026, none "
+     "of the other eight apps' US App Store listings describe a check like that."),
+    ("How were these apps chosen?",
+     "From the top results for room and floor planner searches on the US App Store, keeping apps that plan rooms on "
+     "iPhone and have an active listing. Facts come from each listing, purchase list, privacy label and recent public "
+     "reviews, checked on 20 October 2026."),
+]
+
+# Guides that link into the comparisons from their text: {key} is a head-to-head, {all} the roundup.
+GUIDE_COMPARE = {
+    "how-to-measure-a-room-for-furniture": ("Measuring by hand is what Scooch expects. If you would rather scan, see "
+        "how it compares with {magicplan}, which measures with the camera, or {all}."),
+    "standard-sofa-dimensions": ("Planning where the sofa goes in an app? See how Scooch compares with {planner-5d} "
+        "and {home-design-3d}, or {all}."),
+    "corner-sofa-dimensions": ("Checking a corner sofa in an app? See how Scooch compares with {planner-5d} and "
+        "{live-home-3d}, or {all}."),
+    "bed-sizes-and-space-around-a-bed": ("Choosing an app to plan the bedroom? See how Scooch compares with "
+        "{keyplan-3d} and {home-planner-ai}, or {all}."),
+    "dining-table-clearance": ("Drawing the dining room to scale? See how Scooch compares with {draft-paper} and "
+        "{drawplan}, or {all}."),
+}

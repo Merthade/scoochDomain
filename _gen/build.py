@@ -35,6 +35,12 @@ CT_GUIDE = "Website_Guide"    # every /guides/ page
 CT_TOOL = "Website_Tool"      # the sofa fit calculator
 CT_COMPARE = "Website_Compare"  # /compare/ and every one-vs-one page
 
+import sys  # noqa: E402
+sys.path.insert(0, GEN)
+import compare_data as C  # noqa: E402
+
+VS_URL = lambda key: f"/compare/scooch-vs-{key}/"  # noqa: E731
+
 
 def store_url(campaign):
     assert 0 < len(campaign) <= 30 and campaign == campaign.strip(), f"bad ct: {campaign!r}"
@@ -128,6 +134,7 @@ HEADER_TPL = """<header class="site-header">
       <a href="/#features">Features</a>
       <a href="/sofa-fit-calculator/">Sofa fit calculator</a>
       <a href="/guides/">Guides</a>
+      <a href="/compare/">Compare</a>
       <a href="/#faq">FAQ</a>
       <a class="nav-cta" href="{store}" data-ph="appstore_click">Download</a>
     </div>
@@ -612,6 +619,19 @@ def article_ld(p, canonical):
                                (p["h1"], canonical)])
 
 
+def guide_compare(slug):
+    """A guide's line into the comparisons (compare_data.GUIDE_COMPARE), or nothing."""
+    text = C.GUIDE_COMPARE.get(slug)
+    if not text:
+        return ""
+    names = {a["key"]: a["name"] for a in C.APPS}
+    links = {k: f'<a href="{VS_URL(k)}">{html.escape(n)}</a>' for k, n in names.items()}
+    links["all"] = f'<a href="/compare/">all {len(C.APPS)} room planner apps compared</a>'
+    for k, link in links.items():
+        text = text.replace("{" + k + "}", link)
+    return f'\n<p class="compare-link">{text}</p>'
+
+
 for p in PAGES:
     canonical = f"{DOMAIN}/guides/{p['slug']}/"
     body = f"""<article class="article">
@@ -619,7 +639,7 @@ for p in PAGES:
   <h1>{p['h1']}</h1>
   <p class="lede">{p['lede']}</p>
   <div class="quick-answer"><p>{p['quick']}</p></div>
-{p['body']}
+{p['body']}{guide_compare(p['slug'])}
 {cta_html(p['cta_h'], p['cta_p'], CT_GUIDE)}
 {related_html(p['related'])}
 </article>"""
@@ -1274,283 +1294,377 @@ for lp in LEGAL:
     write(f"{lp['slug']}/index.html", page(lp["title"], lp["meta"], f"{DOMAIN}/{lp['slug']}/", body))
 
 # =========================================================================================
-# /COMPARE/: the combined page and one page per competitor
+# /COMPARE/: the roundup and one page per competitor
 # =========================================================================================
-# Content in compare_data.py, facts in compare_snapshot.json (compare_fetch.py). Structure
-# shared with alarmclockplanner.com's /compare/ (built the same week): disclosure + checked
-# line on every page, no rating or review markup for any app, only Scooch's screenshots.
-import sys
-sys.path.insert(0, GEN)
-import compare_data as CD  # noqa: E402
+# Data, house rules and the head-to-head texts: compare_data.py; store facts:
+# compare_snapshot.json (compare_fetch.py). Same shape as alarmclockplanner.com's /compare/
+# (AlarmPlanner website/_gen/gen_guides.py, 2026-10-20): apps as columns, check / cross / dash
+# marks, Apple-style footnotes, no rating or review markup for any app, only our screenshots.
 
 with open(os.path.join(GEN, "compare_snapshot.json"), encoding="utf-8") as f:
     SNAP = json.load(f)["apps"]
-MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
-          "September", "October", "November", "December"]
+
+_MON = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+for _a in C.APPS:
+    _s = SNAP[_a["key"]]
+    _a.update(version=_s["version"], updated_iso=_s["version_date"], rating=f"{_s['rating']:.1f}",
+              languages=len(_s["languages"]), store=_s["url"], reviews_n=_s["reviews"]["n"])
+US = C.APPS[0]
+COMPARE_URLS = [f"{DOMAIN}/compare/"] + [f"{DOMAIN}{VS_URL(a['key'])}" for a in C.APPS if a["vs"]]
+
+FN = {"about": "*", "price": "**", "listing": "***"}
 
 
-def long_date(iso):
-    y, m, d = iso.split("-")
-    return f"{int(d)} {MONTHS[int(m) - 1]} {y}"
+def fn(key):
+    return f'<sup class="fn"><a href="#fn-{key}" aria-label="Note {FN[key]}">{FN[key]}</a></sup>'
 
 
-def app_fact(key):
-    """Everything about an app that comes from the store snapshot, never typed by hand."""
-    a, s = CD.APPS[key], SNAP[key]
-    revs = s["reviews"]          # counts only: the texts stay in compare_raw.json, uncommitted
-    return {
-        **a,
-        "key": key,
-        "version": s["version"],
-        "updated": long_date(s["version_date"]),
-        "rating": (f"{s['rating']:.1f} ({s['rating_count']:,} ratings)" if s["rating_count"] else "No ratings yet"),
-        "rating_short": f"{s['rating']:.1f} ({s['rating_count']:,})",
-        "rating_count": s["rating_count"],
-        "size": f"{s['size_mb']:,} MB",
-        "size_mb": s["size_mb"],
-        "languages": len(s["languages"]),
-        "min_ios": s["min_ios"].split(".")[0] if s["min_ios"].endswith(".0") else s["min_ios"],
-        "ipad": "Yes" if s["ipad"] else "No",
-        "store": s["url"],
-        "reviews_n": revs["n"],
-        "reviews_low": revs["low"],
-        "reviews_high": revs["high"],
-        "reviews_from": long_date(revs["from"]) if revs["n"] else None,
-        "reviews_to": long_date(revs["to"]) if revs["n"] else None,
-    }
+def footnotes(about_extra=""):
+    notes = [
+        ("about", "We make Scooch, so weigh our view accordingly. Facts about the other apps come from their US "
+                  "App Store listings, purchase lists, privacy labels and public US reviews, checked on "
+                  f"{C.CHECKED}.{about_extra}"),
+        ("price", "US App Store prices. “Cost for the first year” is the one-time price or the cheapest listed "
+                  "plan that covers 12 months, whichever is lower; a cross means it costs more than Scooch's $9.99, "
+                  "a dash that the listing does not say."),
+        ("listing", "As each listing describes it. A dash means the listing does not say, not that the app cannot do it."),
+    ]
+    return ('<div class="footnotes">\n' + "\n".join(
+        f'    <p id="fn-{k}"><span class="fn-mark">{FN[k]}</span> {html.escape(t)}</p>' for k, t in notes)
+        + "\n  </div>")
 
 
-OURS = app_fact(CD.OURS)
-RIVALS = [app_fact(k) for k in CD.ORDER if k != CD.OURS]
-ALL = [OURS] + RIVALS
-VS = {r["key"]: f"/compare/scooch-vs-{r['key']}/" for r in RIVALS}
-COMPARE_URL = "/compare/"
+_YES = re.compile(r"^Yes\b[\s,.:;]*")
+_NO = re.compile(r"^No\b(?!t)[\s,.:;]*")
+_CHECK = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" '
+          'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+_CROSS = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" '
+          'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>')
+_DASH = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path d="M4.5 8h7" fill="none" '
+         'stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>')
 
 
-def esc(t):
-    return html.escape(t, quote=False)
+def mark_cell(text):
+    """"Yes..." gets a check, "No..." a cross, "Not stated/listed/described" a dash. The word stays
+    in the page for screen readers and search engines."""
+    def note(rest):
+        rest = rest.strip()
+        return f' <span class="mark-note">{html.escape(rest[0].upper() + rest[1:])}</span>' if rest else ""
+    if m := _YES.match(text):
+        return f'<span class="mark yes">{_CHECK}<span class="sr-only">Yes</span></span>{note(text[m.end():])}'
+    if m := _NO.match(text):
+        return f'<span class="mark no">{_CROSS}<span class="sr-only">No</span></span>{note(text[m.end():])}'
+    if text.startswith(("Not stated", "Not listed", "Not described")):
+        return f'<span class="mark unknown">{_DASH}</span> <span class="mark-note">{html.escape(text)}</span>'
+    return html.escape(text)
 
 
-def ul(items):
-    return "<ul>\n" + "\n".join(f"    <li>{esc(i)}</li>" for i in items) + "\n  </ul>"
+def _quarter(iso):
+    y, m, _ = iso.split("-")
+    return int(y), (int(m) - 1) // 3 + 1
 
 
-def store_link(a):
-    if a["key"] == CD.OURS:
-        return f'<a href="{store_url(CT_COMPARE)}" data-ph="appstore_click">Scooch on the App Store</a>'
-    return f'<a href="{a["store"]}" rel="nofollow noopener" target="_blank">{esc(a["name"])} on the App Store</a>'
+def update_cell(a):
+    """Last update as a quarter: this quarter gets a check, two or more quarters back is red."""
+    y, q = _quarter(a["updated_iso"])
+    cy, cq = _quarter(C.CHECKED_ISO)
+    behind = (cy - y) * 4 + (cq - q)
+    label = f"Q{q} {y}"
+    if behind <= 0:
+        return f'<span class="mark yes">{_CHECK}</span> {label}'
+    if behind >= 2:
+        return f'<span class="stale">{label}</span>'
+    return label
 
 
-def disclosure(text):
-    return f'<div class="note-box"><p><strong>We make Scooch.</strong> {text}</p></div>'
+def _amounts(text):
+    return [float(x) for x in re.findall(r"\$(\d+(?:\.\d+)?)", text or "")]
 
 
-def compare_ld(headline, desc, canonical, trail):
-    return ld({
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": headline,
-        "description": desc,
-        "image": f"{DOMAIN}/assets/og-image.png",
-        "datePublished": CD.CHECKED,
-        "dateModified": CD.CHECKED,
+def first_year(a):
+    """The one-time price or the cheapest plan covering 12 months, whichever is lower; None = unstated."""
+    costs = []
+    if _YES.match(a["once"]):
+        costs += _amounts(a["once"])[:1]
+    costs += _amounts(a["year"])[:1]
+    return min(costs) if costs else None
+
+
+def first_year_cell(a):
+    cost = first_year(a)
+    if cost is None:
+        return mark_cell("Not stated on the listing")
+    return mark_cell(("Yes, " if cost <= C.OUR_ONCE else "No, ") + f"${cost:.2f}")
+
+
+def rating_cell(a):
+    """US average: a check at 4.5 and above, a cross below. No counts (Emil, 2026-10-20)."""
+    return mark_cell(("Yes, " if float(a["rating"]) >= 4.5 else "No, ") + f"{a['rating']}★")
+
+
+def lang_cell(a):
+    return mark_cell("Yes, 10 or more" if a["languages"] >= 10 else "No, fewer than 10")
+
+
+def download_cell(a):
+    """Ours is the tracked campaign link, theirs a plain nofollow store link."""
+    if a is US:
+        return (f'<a class="table-get" href="{store_url(CT_COMPARE)}" data-ph="appstore_click" '
+                f'aria-label="Download Scooch on the App Store">Download</a>')
+    return (f'<a class="table-store" href="{a["store"]}" rel="nofollow noopener" target="_blank" '
+            f'aria-label="{html.escape(a["name"])} on the App Store">App Store</a>')
+
+
+def other_link(a):
+    if a is US:
+        return f'<a href="{store_url(CT_COMPARE)}" data-ph="appstore_click">View on the App Store</a>'
+    return (f'<a href="{a["store"]}" rel="nofollow noopener" target="_blank" '
+            f'aria-label="View {html.escape(a["name"])} on the App Store">View on the App Store</a>')
+
+
+def app_icon(a, size=36):
+    """The app's own App Store icon (fetch_icons.py), only to identify it; the name follows."""
+    return (f'<img class="app-icon" src="/assets/compare/icons/{a["key"]}.webp" alt="" width="{size}" '
+            f'height="{size}" loading="lazy">')
+
+
+def li(items):
+    return "\n".join(f"        <li>{html.escape(x)}</li>" for x in items)
+
+
+def our_shot(key):
+    f, alt = C.OUR_SHOT[key]
+    return (f'<figure>\n  <img class="screen" src="/assets/{f}.webp" alt="{html.escape(alt)}" loading="lazy" '
+            f'width="640" height="1284">\n  <figcaption>Scooch {US["version"]}</figcaption>\n</figure>')
+
+
+def faq_html(faq):
+    items = "\n".join(f"  <h3>{html.escape(q)}</h3>\n  <p>{html.escape(a)}</p>" for q, a in faq)
+    return f"<h2>Questions</h2>\n{items}"
+
+
+def compare_jsonld(headline, desc, canonical, crumbs, faq=None, itemlist=None):
+    blocks = [{
+        "@context": "https://schema.org", "@type": "Article", "headline": headline, "description": desc,
+        "image": f"{DOMAIN}/assets/og-image.png", "datePublished": C.CHECKED_ISO, "dateModified": C.CHECKED_ISO,
         "author": {"@type": "Person", "name": "Emils Ozols", "url": "https://ozols.dev"},
         "publisher": {"@type": "Organization", "name": "Scooch",
                       "logo": {"@type": "ImageObject", "url": f"{DOMAIN}/assets/icon-512.png"}},
         "mainEntityOfPage": canonical,
-    }) + "\n" + breadcrumb_ld(trail)
+    }, {
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": u}
+                            for i, (n, u) in enumerate(crumbs)],
+    }]
+    if faq:
+        blocks.append({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
+    if itemlist:
+        # Names and store links only: no rating markup for third-party apps (self-serving review markup).
+        blocks.append({"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": a["name"], "url": a["store"]}
+            for i, a in enumerate(itemlist)]})
+    return "\n".join(ld(b) for b in blocks)
 
 
-# ---------------------------------------------------------------- one page per competitor
-def vs_page(t):
-    canonical = f"{DOMAIN}{VS[t['key']]}"
-    name = t["name"]
-    title = f"Scooch vs {name}: room planners compared (2026)"
-    if len(title) > 60:
-        title = f"Scooch vs {name}: compared (2026)"
-    desc = (f"Scooch vs {name}, checked {CD.CHECKED_TEXT}: price, furniture fit warnings, 3D, "
-            f"languages and recent US reviews, including where {name} is stronger.")
-    if len(desc) > 160:
-        desc = f"Scooch vs {name}, checked {CD.CHECKED_TEXT}: price, fit warnings, 3D, languages and recent reviews."
-    rows = [
-        ("Best for", t["best_for"], OURS["best_for"]),
-        ("US rating", t["rating"], OURS["rating"]),
-        ("Price (US)", t["price"], OURS["price"]),
-        (CD.HOW, t["how"], OURS["how"]),
-        (CD.SIZES, t["sizes"], OURS["sizes"]),
-        (CD.FIT, t["fit"], OURS["fit"]),
-        (CD.THREE_D, t["three_d"], OURS["three_d"]),
-        ("Languages", str(t["languages"]), str(OURS["languages"])),
-        ("Download size", t["size"], OURS["size"]),
-        ("Last update", t["updated"], OURS["updated"]),
-        ("Requires", f"iOS {t['min_ios']} or later", f"iOS {OURS['min_ios']} or later"),
-        ("iPad", t["ipad"], OURS["ipad"]),
-    ]
-    glance = table(["", esc(name), "Scooch"], [(f"<strong>{esc(a)}</strong>", esc(b), esc(c)) for a, b, c in rows])
-    reviews = ""
-    if t["reviews_n"]:
-        reviews = f"""
-  <h2>What recent reviews of {esc(name)} mention</h2>
-  <p>We read the {t['reviews_n']} most recent US reviews of {esc(name)}, written between {t['reviews_from']} and {t['reviews_to']}. {t['reviews_low']} gave one or two stars and {t['reviews_high']} gave four or five. Paraphrased:</p>
-  {ul(t['review_themes'])}
-  <p>{esc(t['review_praise'])}</p>"""
-    faq = [
-        (f"Is {name} free?",
-         f"{name} is a free download. " + " ".join(t["price_detail"]), None),
-        (f"Does {name} warn you when furniture will not fit?",
-         (f"Its US App Store listing does not describe that, as of {CD.CHECKED_TEXT}. "
-          "Scooch highlights any piece that overlaps another or sticks out of the room."), None),
-        (f"Is Scooch better than {name}?",
-         f"It depends on the job. Pick {name} if {t['verdict_theirs']}. Pick Scooch if {t['verdict_ours']}.", None),
-        ("Does Scooch do 3D or scan rooms?",
-         "No. Scooch is 2D: you measure the room and type or drag its size, then place furniture at real sizes.", None),
-    ]
-    others = "\n".join(f'      <li><a href="{VS[o["key"]]}">Scooch vs {esc(o["name"])}</a></li>'
-                       for o in RIVALS if o["key"] != t["key"])
-    body = f"""<article class="article">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › <a href="{COMPARE_URL}">Compare</a> › Scooch vs {esc(name)}</nav>
-  <h1>Scooch vs {esc(name)}</h1>
-  <p class="lede">{esc(name)} is for {esc(t['best_for'][0].lower() + t['best_for'][1:])}. Scooch is for checking that furniture fits a room before you buy or move it. Here is how the two compare, with every fact dated.</p>
-  {disclosure(f"Every fact about {esc(name)} comes from its US App Store listing and public US reviews, checked on {CD.CHECKED_TEXT} ({esc(name)} version {esc(t['version'])}, Scooch version {esc(OURS['version'])}).")}
-  <div class="quick-answer"><p><strong>Pick {esc(name)}</strong> if {esc(t['verdict_theirs'])}. <strong>Pick Scooch</strong> if {esc(t['verdict_ours'])}.</p></div>
+def price_card(a):
+    """Big figures for what the listing states, the full plan list below as fine print."""
+    tiles = []
+    if a is US:
+        tiles.append(("Free version", "Intro only", "planning needs the unlock"))
+    else:
+        tiles.append(("Download", "Free", "paid upgrade inside" if a["year"] is None else "paid plans inside"))
+    if a["year"] and _amounts(a["year"]):
+        tiles.append(("Per year", a["year"], "if subscribed"))
+    if m := _YES.match(a["once"]):
+        tiles.append((f'Pay once{fn("price") if a is US else ""}', a["once"][m.end():], "no subscription"))
+    elif _NO.match(a["once"]):
+        tiles.append(("Pay once", "Not offered", "subscription only"))
+    if len(tiles) == 1:
+        # Neither a yearly nor a one-time price is stated: show the listed range rather than hide it.
+        amounts = re.findall(r"\$\d+(?:\.\d+)?", a["price"])
+        if amounts:
+            lo = min(amounts, key=lambda x: float(x[1:]))
+            hi = max(amounts, key=lambda x: float(x[1:]))
+            tiles.append(("Paid plans", f"{lo} to {hi}", "lengths not listed"))
+    tile_html = "".join(
+        f'<div class="price-tile{" free" if v == "Free" else ""}"><span class="price-label">{l}</span>'
+        f'<span class="price-amount">{html.escape(v)}</span><span class="price-unit">{u}</span></div>'
+        for l, v, u in tiles)
+    note = re.sub(r"^Free( download| with limits| version[^.]*)?[.;] ?", "", a["price"])
+    note = note[0].upper() + note[1:] if note else ""
+    return (f'<div class="price-card{" ours" if a is US else ""}"><div class="price-tiles">{tile_html}</div>'
+            + (f'<p class="price-note">{html.escape(note)}{fn("price")}</p>' if a is not US and note else "")
+            + "</div>")
 
-  <h2>At a glance</h2>
-{glance}
-{figure("shot-clash.webp", "Scooch flagging a 360 cm sofa in red because it does not fit the room", "Scooch: red means it does not fit")}
 
-  <h2>Where {esc(name)} is stronger</h2>
-  {ul(t['theirs_stronger'])}
+def _ours(a):
+    return ' class="ours"' if a is US else ""
 
-  <h2>Where Scooch is stronger</h2>
-  {ul(t['ours_stronger'])}
-{reviews}
 
-  <h2>Pricing</h2>
-  <h3>{esc(name)}</h3>
-  <p>{esc(" ".join(t['price_detail']))}</p>
-  <h3>Scooch</h3>
-  <p>{esc(" ".join(OURS['price_detail']))}</p>
+FLIP_ROWS = [
+    ("Best for", lambda a: html.escape(a["best_for"])),
+    ("US rating (average)", rating_cell),
+    (f'Pay once, no subscription{fn("price")}', lambda a: mark_cell(a["once"])),
+    (f'Cost for the first year{fn("price")}', first_year_cell),
+    (f'Warns when furniture does not fit{fn("listing")}', lambda a: mark_cell(a["fit"])),
+    (f'Furniture at sizes you type{fn("listing")}', lambda a: mark_cell(a["sizes"])),
+    (f'3D view{fn("listing")}', lambda a: mark_cell(a["three_d"])),
+    (f'Scans the room with the camera{fn("listing")}', lambda a: mark_cell(a["scan"])),
+    ("No tracking (App Store privacy label)", lambda a: mark_cell(a["privacy"])),
+    ("Languages", lang_cell),
+    ("Last update", update_cell),
+    ("Get it", download_cell),
+]
+VERSIONS = ", ".join(f'{a["name"]} {a["version"]}' for a in C.APPS)
 
-  <h2>FAQ</h2>
-  <div class="faq-list">
-{faq_details(faq)}
+# ---- the roundup ----
+ROUNDUP_TITLE = f"Best Room Planner Apps for iPhone (2026): {len(C.APPS)} Compared"
+ROUNDUP_META = ("Nine iPhone room planner apps side by side: what each is best for, US prices, 3D, scanning, "
+                "privacy, and honest pros and cons. Checked October 2026.")
+heads = "".join(
+    f'<th scope="col"{_ours(a)}><a class="app-head" href="#{a["key"]}">{app_icon(a)}<span>{i + 1}. '
+    f'{html.escape(a["name"])}</span></a></th>' for i, a in enumerate(C.APPS))
+rows = "\n".join(f'      <tr><th scope="row">{label}</th>' + "".join(f"<td{_ours(a)}>{cell(a)}</td>" for a in C.APPS)
+                 + "</tr>" for label, cell in FLIP_ROWS)
+picks = "\n".join(f"    <li><strong>{html.escape(k)}:</strong> {html.escape(v)}</li>" for k, v in C.PICKS)
+cards = []
+for i, a in enumerate(C.APPS):
+    vs = f' · <a href="{VS_URL(a["key"])}">Full comparison</a>' if a["vs"] else ""
+    pic = our_shot("scooch") if a is US else ""
+    cards.append(f"""<section class="app-card" id="{a['key']}">
+  <h2 class="app-title">{app_icon(a, 44)}<span>{i + 1}. {html.escape(a['name'])}</span></h2>
+  <p class="app-meta">By {html.escape(a['developer'])} · Best for: {html.escape(a['best_for'])} · {a['rating']}★ average US rating</p>
+  <p>{html.escape(a['summary'])}</p>
+  <div class="app-card-body{' with-shot' if pic else ''}">
+  {pic}
+  <div class="card-side">
+  <div class="pros-cons">
+    <div><h3>Pros</h3><ul>
+{li(a['pros'])}
+    </ul></div>
+    <div><h3>Cons</h3><ul>
+{li(a['cons'])}
+    </ul></div>
   </div>
+  {price_card(a)}
+  <p class="checked">{other_link(a)}{vs}</p>
+  </div>
+  </div>
+</section>""")
 
-{cta_html("Check what fits before you buy", "Draw your rooms at their real size, place furniture at real sizes, and see what does not fit. $9.99 once.", CT_COMPARE)}
+roundup_body = f"""<article class="article compare">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › Compare</nav>
+  <h1>{ROUNDUP_TITLE}</h1>
+  <p class="lede">There is no single best room planner, because people want different things from one. Some want to see a room in 3D, some need to scan it for work, some just need to know whether the sofa fits. Here are {len(C.APPS)} iPhone room planners, what each does best, and where each falls short.{fn("about")}</p>
+  <div class="table-wrap">
+    <table class="compare-table flip">
+      <thead><tr><th scope="col"><span class="sr-only">Feature</span></th>{heads}</tr></thead>
+      <tbody>
+{rows}
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Scroll sideways for all {len(C.APPS)} apps.</p>
+  <h2>Quick picks</h2>
+  <ul class="picks">
+{picks}
+  </ul>
+{"".join(cards)}
+{faq_html(C.ROUNDUP_FAQ)}
+{cta_html("Check what fits before you buy", "Rooms at their real size, furniture at real sizes, and a warning when something does not fit. $9.99 once.", CT_COMPARE)}
+  <div class="related">
+    <h2>One-to-one comparisons</h2>
+    <ul>
+{chr(10).join(f'      <li><a href="{VS_URL(a["key"])}">{html.escape(C.VERSUS[a["key"]]["label"])}</a></li>' for a in C.APPS if a["vs"])}
+    </ul>
+    <p><a href="/guides/">Room planning guides</a></p>
+  </div>
+  {footnotes(" Scooch is listed first because it is ours; the rest are in order of their number of US ratings. Versions compared: " + VERSIONS + ".")}
+</article>"""
+canonical = f"{DOMAIN}/compare/"
+write("compare/index.html",
+      page(ROUNDUP_TITLE, ROUNDUP_META, canonical, roundup_body, CT_COMPARE,
+           compare_jsonld(ROUNDUP_TITLE, ROUNDUP_META, canonical, [("Home", f"{DOMAIN}/"), ("Compare", canonical)],
+                          faq=C.ROUNDUP_FAQ, itemlist=C.APPS)))
+
+# ---- one page per competitor ----
+VS_ROWS = [(plain_label, cell) for plain_label, cell in FLIP_ROWS if not plain_label.startswith("Best for")]
+
+
+def blocks(items):
+    return "\n".join(f"  <h3>{html.escape(h)}</h3>\n  <p>{html.escape(p_)}</p>" for h, p_ in items)
+
+
+for a in C.APPS:
+    if not a["vs"]:
+        continue
+    v = C.VERSUS[a["key"]]
+    them = a["short"]
+    canonical = f"{DOMAIN}{VS_URL(a['key'])}"
+    trs = "\n".join(
+        f'      <tr><th scope="row">{label}</th><td>{cell(a)}</td><td>{cell(US)}</td></tr>'
+        for label, cell in [("Best for", lambda x: html.escape(x["best_for"]))] + VS_ROWS)
+    reviews = ""
+    if v["reviews"]:
+        reviews = (f'<h2 class="app-title">{app_icon(a, 32)}<span>What recent reviews of {html.escape(them)} mention</span></h2>\n'
+                   f"  <p>From the {a['reviews_n']} most recent US App Store reviews of {html.escape(them)}, read on {C.CHECKED}. "
+                   "These are individual experiences, not tests we ran, but these themes came up more than once:</p>\n"
+                   f"  <ul>\n{li(v['reviews'])}\n  </ul>")
+    others = "\n".join(f'      <li><a href="{VS_URL(b["key"])}">{html.escape(C.VERSUS[b["key"]]["label"])}</a></li>'
+                       for b in C.APPS if b["vs"] and b is not a)
+    body = f"""<article class="article compare">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/compare/">Compare</a> › {html.escape(v['label'])}</nav>
+  <h1>{html.escape(v['h1'])}</h1>
+  <p class="lede">{html.escape(v['lede'])}{fn("about")}</p>
+  <div class="quick-answer"><p><strong>Pick {html.escape(them)}</strong> if {html.escape(v['pick_them'])}<br><strong>Pick Scooch</strong> if {html.escape(v['pick_us'])}</p></div>
+  <div class="table-wrap">
+    <table class="compare-table vs">
+      <thead><tr><th></th><th><span class="app-head row">{app_icon(a, 32)}<span>{html.escape(a['name'])}</span></span></th><th><span class="app-head row">{app_icon(US, 32)}<span>Scooch</span></span></th></tr></thead>
+      <tbody>
+{trs}
+      </tbody>
+    </table>
+  </div>
+  <h2 class="app-title">{app_icon(a, 32)}<span>Where {html.escape(them)} is stronger</span></h2>
+{blocks(v['them_stronger'])}
+  <h2 class="app-title">{app_icon(US, 32)}<span>Where Scooch is stronger</span></h2>
+{blocks(v['us_stronger'])}
+  <div class="app-card-body with-shot about-us">
+  {our_shot(a['key'])}
+  <div class="card-side"><div class="about-box">
+    <h3>About Scooch</h3>
+    <p>A 2D room planner for checking that furniture fits, before anything heavy moves.</p>
+    <ul>
+{li(C.ABOUT_US)}
+    </ul>
+    <p><a href="/#features">See all features</a></p>
+  </div></div>
+  </div>
+  <h2 class="app-title">{app_icon(US, 32)}<span>What Scooch does not do</span></h2>
+  <ul>
+{li(US['cons'])}
+  </ul>
+  {reviews}
+  <h2>Pricing</h2>
+  <p>{html.escape(v['pricing'])}</p>
+{faq_html(v['faq'])}
+{cta_html("Try Scooch", "Rooms at their real size, furniture at real sizes, and a warning when something does not fit. $9.99 once.", CT_COMPARE)}
   <div class="related">
     <h2>Other comparisons</h2>
     <ul>
 {others}
     </ul>
-    <p><a href="{COMPARE_URL}">All {len(ALL)} room planner apps compared</a></p>
+    <p><a href="/compare/">All {len(C.APPS)} room planner apps compared</a></p>
   </div>
+  {footnotes(f" Versions compared: {a['name']} {a['version']}, Scooch {US['version']}.")}
 </article>"""
-    trail = [("Home", f"{DOMAIN}/"), ("Compare", f"{DOMAIN}{COMPARE_URL}"), (f"Scooch vs {name}", canonical)]
-    write(VS[t["key"]].strip("/") + "/index.html",
-          page(title, desc, canonical, body, CT_COMPARE,
-               compare_ld(f"Scooch vs {name}", desc, canonical, trail) + "\n" + faq_ld(faq)))
+    write(VS_URL(a["key"]).strip("/") + "/index.html",
+          page(v["title"], v["meta"], canonical, body, CT_COMPARE,
+               compare_jsonld(v["h1"], v["meta"], canonical,
+                              [("Home", f"{DOMAIN}/"), ("Compare", f"{DOMAIN}/compare/"), (v["label"], canonical)],
+                              faq=v["faq"])))
 
-
-for rival in RIVALS:
-    vs_page(rival)
-
-
-# ---------------------------------------------------------------- the combined page
-def picks():
-    """Only what the data supports, each naming whichever app actually wins."""
-    by = lambda f: max(ALL, key=f)  # noqa: E731
-    langs, rated, small = by(lambda a: a["languages"]), by(lambda a: a["rating_count"]), min(ALL, key=lambda a: a["size_mb"])
-    lines = [
-        "<strong>Lowest one-time price:</strong> Keyplan 3D Lite's Standard version, $5.99; then Scooch and Draft Paper, $9.99. Each of the three has no subscription.",
-        f"<strong>Most languages:</strong> {esc(langs['name'])}, {langs['languages']}.",
-        f"<strong>Most US ratings:</strong> {esc(rated['name'])}, {rated['rating_count']:,}.",
-        f"<strong>Smallest download:</strong> {esc(small['name'])}, {small['size']}; Scooch is next at {OURS['size']}.",
-        "<strong>Largest catalogue:</strong> Planner 5D, over 8,400 items with premium.",
-        "<strong>Warns when furniture does not fit:</strong> Scooch is the only one of the nine whose listing describes it.",
-    ]
-    return "<ul>\n" + "\n".join(f"    <li>{l}</li>" for l in lines) + "\n  </ul>"
-
-
-def card(i, a):
-    ours = a["key"] == CD.OURS
-    label = f"{i}. {esc(a['name'])}" + (" (ours)" if ours else "")
-    full = "" if ours else f' · <a href="{VS[a["key"]]}">Full comparison: Scooch vs {esc(a["name"])}</a>'
-    return f"""
-  <h2 id="{a['key']}">{label}</h2>
-  <p class="cluster-intro">by {esc(a['developer'])} · Best for: {esc(a['best_for'])}</p>
-  <p>{esc(a['summary'])}</p>
-  <h3>Pros</h3>
-  {ul(a['pros'])}
-  <h3>Cons</h3>
-  {ul(a['cons'])}
-  <p><strong>Price (US):</strong> {esc(" ".join(a['price_detail']))}</p>
-  <p class="cluster-intro">Checked: version {esc(a['version'])} (updated {a['updated']}), US rating {a['rating']}, on {CD.CHECKED_TEXT}. {store_link(a)}{full}</p>"""
-
-
-def combined():
-    canonical = f"{DOMAIN}{COMPARE_URL}"
-    n = len(ALL)
-    title = f"Best room planner apps for iPhone (2026): {n} compared"
-    desc = (f"{n} room planner apps for iPhone compared on {CD.CHECKED_TEXT}: price, rating, 3D, "
-            "languages and which warn you when furniture will not fit.")
-    head_cells = ["#", "App", "Best for", "US rating", "Price (US)", "Warns when furniture does not fit",
-                  "3D view", "Languages", "Last update"]
-    rows = []
-    for i, a in enumerate(ALL, 1):
-        app = f'<a href="#{a["key"]}">{esc(a["name"])}</a>'
-        rows.append((str(i), app, esc(a["best_for"]), esc(a["rating_short"]), esc(a["price"]),
-                     "Yes" if a["key"] == CD.OURS else "Not in its listing",
-                     esc(a["three_d"].replace("Not mentioned in its listing", "Not in its listing")),
-                     str(a["languages"]), a["updated"]))
-    faq = [
-        ("Which room planner apps are free?",
-         "All nine are free to download, but each charges for the full app: Scooch and Draft Paper $9.99 once, "
-         "Keyplan 3D Lite $5.99 once for its Standard version, and the others by subscription (Live Home 3D also "
-         "sells lifetime upgrades). The free versions differ: see each app's price above.", None),
-        ("Which app tells me if my furniture will fit?",
-         f"Scooch highlights furniture that overlaps another piece or sticks out of the room. As of {CD.CHECKED_TEXT}, "
-         "none of the other eight apps' US App Store listings describe a check like that.", None),
-        ("Do I need a 3D app to plan furniture?",
-         "Not to check fit: a plan drawn to scale answers whether a piece fits. 3D helps when you want to see the "
-         "style of a room; Planner 5D, Home Planner AI, Home Design 3D, Keyplan 3D Lite and Live Home 3D do that, Scooch does not.", None),
-        ("Which apps can scan a room with the camera?",
-         "Per their listings: magicplan, Planner 5D, Home Planner AI and Live Home 3D (with LiDAR). Scooch cannot: you "
-         "measure the room and type its size.", None),
-    ]
-    cards = "".join(card(i, a) for i, a in enumerate(ALL, 1))
-    body = f"""<article class="article wide">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › Compare</nav>
-  <h1>Room planner apps for iPhone, compared</h1>
-  <p class="lede">{n} apps that plan a room on iPhone, side by side: what each is best for, what it costs in the US, whether it works in 3D, and whether it tells you when furniture will not fit.</p>
-  {disclosure(f"Scooch is listed first and marked as ours. Every fact about the other apps comes from their US App Store listings and public US reviews, checked on {CD.CHECKED_TEXT}; each app's version is in its section below.")}
-
-{table(head_cells, rows).replace('class="table-wrap"', 'class="table-wrap compare-table"', 1)}
-  <h3>Category picks</h3>
-  {picks().replace("<ul>", '<ul class="compare-picks">', 1)}
-{cards}
-
-  <h2>FAQ</h2>
-  <div class="faq-list">
-{faq_details(faq)}
-  </div>
-
-{cta_html("Check what fits before you buy", "Draw your rooms at their real size, place furniture at real sizes, and see what does not fit. $9.99 once.", CT_COMPARE)}
-</article>"""
-    trail = [("Home", f"{DOMAIN}/"), ("Compare", canonical)]
-    item_list = ld({
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "name": "Room planner apps for iPhone",
-        "itemListElement": [{"@type": "ListItem", "position": i, "name": a["name"], "url": a["store"]}
-                            for i, a in enumerate(ALL, 1)],
-    })
-    write("compare/index.html",
-          page(title, desc, canonical, body, CT_COMPARE,
-               compare_ld("Room planner apps for iPhone, compared", desc, canonical, trail)
-               + "\n" + faq_ld(faq) + "\n" + item_list))
-
-
-combined()
 
 # =========================================================================================
 # 404, SITEMAP, ROBOTS, CNAME
@@ -1567,13 +1681,12 @@ write("404.html", page("Page Not Found | Scooch",
 urls = ([f"{DOMAIN}/", f"{DOMAIN}{CALC}", f"{DOMAIN}/guides/"]
         + [f"{DOMAIN}/guides/{p['slug']}/" for p in PAGES]
         + [f"{DOMAIN}/{lp['slug']}/" for lp in LEGAL])
-compare_urls = [f"{DOMAIN}{COMPARE_URL}"] + [f"{DOMAIN}{u}" for u in VS.values()]
 sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 sitemap += [f"  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>" for u in urls]
-sitemap += [f"  <url><loc>{u}</loc><lastmod>{CD.CHECKED}</lastmod></url>" for u in compare_urls]
+sitemap += [f"  <url><loc>{u}</loc><lastmod>{C.CHECKED_ISO}</lastmod></url>" for u in COMPARE_URLS]
 sitemap.append("</urlset>")
 write("sitemap.xml", "\n".join(sitemap) + "\n")
 write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n")
 write("CNAME", "getscooch.com\n")
-print(f"{len(urls) + len(compare_urls)} urls in the sitemap")
+print(f"{len(urls) + len(COMPARE_URLS)} urls in the sitemap")

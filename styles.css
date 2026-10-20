@@ -336,11 +336,111 @@ a.article-cta:hover { text-decoration: none; }
 .mascot { width: 180px; height: auto; margin: 0 auto 18px; }
 td .sub, th .sub { color: var(--muted); font-size: 13.5px; font-weight: 400; }
 
-/* /compare/: the combined page runs wider, so its nine-column table reads without squeezing;
-   on a phone the table scrolls sideways inside .table-wrap like every other table here. */
-.article.wide { max-width: 1120px; }
-.compare-table table { min-width: 960px; font-size: 14px; }
-.compare-table th { white-space: normal; }
-.compare-table td:nth-child(3) { min-width: 190px; }
-.compare-table td:nth-child(5) { min-width: 150px; }
-.compare-picks li { margin-bottom: 6px; }
+/* ---------- Comparison pages (/compare/), ported from alarmclockplanner.com ---------- */
+.article.compare { max-width: 900px; }
+.article.compare .table-wrap { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0 8px; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 1000px; }
+/* Roundup: one column per app, feature names pinned while scrolling sideways */
+.compare-table.flip { min-width: 0; width: max-content; border-collapse: separate; border-spacing: 0; }
+.compare-table.flip td, .compare-table.flip thead th { width: 158px; min-width: 158px; max-width: 158px; }
+.compare-table.flip thead th { white-space: normal; vertical-align: top; }
+.compare-table.flip th[scope="row"], .compare-table.flip thead th:first-child {
+  position: sticky; left: 0; z-index: 1; width: 128px; min-width: 128px; max-width: 128px; white-space: normal;
+  background: linear-gradient(var(--panel-2), var(--panel-2)), var(--bg); border-right: 1px solid var(--border); }
+.compare-table.flip thead th:first-child { z-index: 2; }
+/* Our column stays in view too, right of the feature names */
+.compare-table.flip th, .compare-table.flip td { box-sizing: border-box; }
+.compare-table.flip .ours { position: sticky; left: 128px; z-index: 1;
+  background: linear-gradient(var(--accent-dim), var(--accent-dim)), var(--bg);
+  border-right: 1px solid rgba(166, 194, 95, 0.35); }
+@media (max-width: 640px) {
+  .compare-table.flip { font-size: 13px; }
+  .compare-table.flip th, .compare-table.flip td { padding: 10px 8px; }
+  .compare-table.flip th[scope="row"], .compare-table.flip thead th:first-child { width: 92px; min-width: 92px; max-width: 92px; }
+  .compare-table.flip .ours { left: 92px; }
+  .compare-table.flip td, .compare-table.flip thead th:not(:first-child) { width: 118px; min-width: 118px; max-width: 118px; }
+}
+.compare-table .ours { background: var(--accent-dim); }
+.compare-table.flip thead th.ours a { color: var(--accent); }
+.app-icon { display: block; flex: none; border-radius: 22.5%; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.app-head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.app-head.row { flex-direction: row; align-items: center; gap: 10px; }
+.app-head:hover { text-decoration: none; }
+.app-head:hover span { text-decoration: underline; }
+.table-get { display: inline-block; padding: 7px 16px; border-radius: 999px; background: var(--accent);
+  color: var(--bg); font-weight: 700; }
+.table-get:hover { text-decoration: none; filter: brightness(1.08); }
+.table-store { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+  color: var(--text); }
+.table-store:hover { text-decoration: none; background: var(--panel-2); }
+.mark { display: inline-flex; vertical-align: -3px; }
+.mark svg { width: 17px; height: 17px; }
+.mark.yes { color: var(--accent); }
+.mark.no { color: var(--clash); }
+.mark.unknown { color: var(--muted); }
+.mark-note { color: var(--text); }
+.mark.unknown + .mark-note { color: var(--muted); }
+.compare-table .stale { color: var(--clash); font-weight: 600; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.compare-table.vs { min-width: 560px; }
+.compare-table th, .compare-table td { padding: 11px 12px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--border); }
+.compare-table thead th { background: var(--panel-2); color: var(--text); font-weight: 600; white-space: nowrap; }
+.compare-table tbody th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+.compare-table td { color: var(--text); }
+.compare-table td:first-child { font-weight: 400; }
+.compare-table tr:last-child th, .compare-table tr:last-child td { border-bottom: 0; }
+.compare-table.vs td:last-child { background: var(--accent-dim); }
+.table-note { font-size: 13.5px; color: var(--muted); margin-bottom: 8px; }
+.picks { list-style: none; margin-left: 0 !important; }
+.picks li { padding-left: 0; }
+.app-card { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 40px; scroll-margin-top: 90px; }
+.app-card h2 { margin-top: 24px; }
+.app-meta { color: var(--muted); font-size: 14.5px; }
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 8px 0 12px; }
+.pros-cons > div { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 4px 18px 6px; }
+.pros-cons h3 { margin-top: 14px; }
+.pros-cons ul { margin-left: 18px; }
+.pros-cons li { font-size: 15px; }
+.checked { font-size: 13.5px; color: var(--muted); }
+/* App card: screenshot left, pros and cons stacked on the right */
+.app-card-body.with-shot { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; margin: 18px 0 12px; }
+.app-card-body.with-shot figure { margin: 0; max-width: none; }
+.app-card-body.with-shot .pros-cons { grid-template-columns: 1fr; margin: 0; }
+.card-side { display: grid; gap: 16px; }
+.app-card-body:not(.with-shot) .card-side { margin: 8px 0 12px; }
+.price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
+.price-card.ours { border-color: rgba(166, 194, 95, 0.45); background: linear-gradient(var(--accent-dim), var(--accent-dim)), var(--panel); }
+.price-tiles { display: flex; flex-wrap: wrap; gap: 8px; }
+.price-tile { flex: 1 1 96px; display: flex; flex-direction: column; padding: 8px 12px; background: var(--panel-2); border-radius: 10px; }
+.price-tile.free { background: rgba(166, 194, 95, 0.16); box-shadow: inset 0 0 0 1px rgba(166, 194, 95, 0.4); }
+.price-tile.free .price-amount { color: var(--accent); }
+.price-label { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.price-amount { font-size: 19px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.price-unit { font-size: 12.5px; color: var(--muted); }
+.price-note { font-size: 12.5px; color: var(--muted); margin: 8px 2px 0; }
+.card-side .checked { margin: 0 2px; }
+@media (max-width: 640px) {
+  .app-card-body.with-shot { grid-template-columns: 1fr; }
+  .app-card-body.with-shot figure { max-width: 240px; margin: 0 auto; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .compare-table.vs { min-width: 0; font-size: 13.5px; }
+  .compare-table.vs th, .compare-table.vs td { padding: 10px 8px; }
+  .compare-table.vs tbody th { white-space: normal; width: 28%; }
+  .compare-table.vs td { width: 36%; }
+}
+.fn { font-size: 0.68em; line-height: 0; margin-left: 1px; }
+.fn a { color: var(--muted); text-decoration: none; }
+.fn a:hover { color: var(--accent); }
+.footnotes { border-top: 1px solid var(--border); margin-top: 36px; padding-top: 16px; }
+.footnotes p { font-size: 12.5px; line-height: 1.55; color: var(--muted); margin: 0 0 8px; scroll-margin-top: 90px; }
+.fn-mark { display: inline-block; min-width: 2.2em; color: var(--text); }
+.about-box { background: linear-gradient(var(--accent-dim), var(--accent-dim)), var(--panel); border: 1px solid rgba(166, 194, 95, 0.35);
+  border-radius: 14px; padding: 4px 18px 12px; }
+.about-box h3 { margin-top: 14px; }
+.about-box ul { margin-left: 18px; }
+.about-box li { font-size: 15px; }
+.compare-link { margin-top: 28px; padding: 12px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); font-size: 15px; }
+.app-title { display: flex; align-items: center; gap: 12px; }
+.app-title .app-icon { flex: none; }
