@@ -335,3 +335,12 @@ a.article-cta:hover { text-decoration: none; }
 
 .mascot { width: 180px; height: auto; margin: 0 auto 18px; }
 td .sub, th .sub { color: var(--muted); font-size: 13.5px; font-weight: 400; }
+
+/* /compare/: the combined page runs wider, so its nine-column table reads without squeezing;
+   on a phone the table scrolls sideways inside .table-wrap like every other table here. */
+.article.wide { max-width: 1120px; }
+.compare-table table { min-width: 960px; font-size: 14px; }
+.compare-table th { white-space: normal; }
+.compare-table td:nth-child(3) { min-width: 190px; }
+.compare-table td:nth-child(5) { min-width: 150px; }
+.compare-picks li { margin-bottom: 6px; }

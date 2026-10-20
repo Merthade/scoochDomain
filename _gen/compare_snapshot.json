@@ -1,0 +1,624 @@
+{
+ "fetched": "2026-10-20",
+ "store": "us",
+ "apps": {
+  "scooch": {
+   "id": 6799503727,
+   "name": "Scooch - Room & Floor Planner",
+   "seller": "Emils Ozols",
+   "url": "https://apps.apple.com/us/app/id6799503727",
+   "version": "1.0.2",
+   "version_date": "2026-10-11",
+   "rating": 5,
+   "rating_count": 2,
+   "price": "Free",
+   "size_mb": 11,
+   "min_ios": "26.0",
+   "languages": [
+    "AR",
+    "DA",
+    "NL",
+    "EN",
+    "ET",
+    "FI",
+    "FR",
+    "DE",
+    "ID",
+    "IT",
+    "LV",
+    "NB",
+    "PL",
+    "PT",
+    "ES",
+    "SV"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "Unlock Scooch",
+     "$9.99"
+    ]
+   ],
+   "reviews": {
+    "n": 1,
+    "low": 0,
+    "high": 1,
+    "from": "2026-10-01",
+    "to": "2026-10-01"
+   }
+  },
+  "magicplan": {
+   "id": 427424432,
+   "name": "magicplan",
+   "seller": "Technologies magicplan Inc.",
+   "url": "https://apps.apple.com/us/app/id427424432",
+   "version": "2026.40.0",
+   "version_date": "2026-10-14",
+   "rating": 4.7,
+   "rating_count": 41267,
+   "price": "Free",
+   "size_mb": 347,
+   "min_ios": "16.4",
+   "languages": [
+    "EN",
+    "FR",
+    "DE",
+    "PT",
+    "ES"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "Sketch Plan (1 Month)",
+     "$12.99"
+    ],
+    [
+     "Report Plan (1 Month)",
+     "$39.99"
+    ],
+    [
+     "Estimate Plan (1 Month)",
+     "$89.99"
+    ],
+    [
+     "Sketch Plan (1 Year)",
+     "$129.99"
+    ],
+    [
+     "Report Plan (1 Year)",
+     "$399.99"
+    ],
+    [
+     "Estimate Plan (1 Year)",
+     "$899.99"
+    ]
+   ],
+   "reviews": {
+    "n": 100,
+    "low": 51,
+    "high": 43,
+    "from": "2025-11-12",
+    "to": "2026-10-18"
+   }
+  },
+  "planner-5d": {
+   "id": 606173978,
+   "name": "Planner 5D: AI Home Design",
+   "seller": "Planner5D, UAB",
+   "url": "https://apps.apple.com/us/app/id606173978",
+   "version": "5.13.1",
+   "version_date": "2026-10-19",
+   "rating": 4.4,
+   "rating_count": 42117,
+   "price": "Free",
+   "size_mb": 980,
+   "min_ios": "17.0",
+   "languages": [
+    "AR",
+    "DA",
+    "NL",
+    "EN",
+    "FI",
+    "FR",
+    "DE",
+    "EL",
+    "ID",
+    "IT",
+    "JA",
+    "KO",
+    "MS",
+    "NB",
+    "PL",
+    "PT",
+    "RU",
+    "ZH",
+    "ES",
+    "SV",
+    "TH",
+    "ZH",
+    "TR",
+    "VI"
+   ],
+   "ipad": true,
+   "genre": "Lifestyle",
+   "in_app_purchases": [
+    [
+     "Interior design: annual use",
+     "$69.99"
+    ],
+    [
+     "Interior design: annual use",
+     "$119.99"
+    ],
+    [
+     "House design: monthly use",
+     "$19.99"
+    ],
+    [
+     "Interior design: weekly use",
+     "$7.99"
+    ],
+    [
+     "Interior design: annual use",
+     "$119.99"
+    ],
+    [
+     "Interior design: annual use",
+     "$69.99"
+    ],
+    [
+     "Interior design: annual use",
+     "$119.99"
+    ],
+    [
+     "Full catalog for 30 days",
+     "$6.99"
+    ],
+    [
+     "Yearly Subscription",
+     "$29.99"
+    ],
+    [
+     "Full catalog access for 1 year",
+     "$15.99"
+    ]
+   ],
+   "reviews": {
+    "n": 50,
+    "low": 36,
+    "high": 10,
+    "from": "2026-09-03",
+    "to": "2026-10-17"
+   }
+  },
+  "home-planner-ai": {
+   "id": 1076159017,
+   "name": "Home Planner AI：Room Design 3D",
+   "seller": "Room Planner Ltd",
+   "url": "https://apps.apple.com/us/app/id1076159017",
+   "version": "26.49",
+   "version_date": "2026-10-17",
+   "rating": 4.6,
+   "rating_count": 46391,
+   "price": "Free",
+   "size_mb": 1382,
+   "min_ios": "15.0",
+   "languages": [
+    "AR",
+    "BG",
+    "HR",
+    "CS",
+    "DA",
+    "NL",
+    "EN",
+    "FI",
+    "FR",
+    "DE",
+    "HE",
+    "HU",
+    "ID",
+    "IT",
+    "JA",
+    "KO",
+    "NB",
+    "PL",
+    "PT",
+    "RO",
+    "RU",
+    "ZH",
+    "SK",
+    "ES",
+    "SV",
+    "TH",
+    "ZH",
+    "TR",
+    "UK",
+    "VI"
+   ],
+   "ipad": true,
+   "genre": "Lifestyle",
+   "in_app_purchases": [
+    [
+     "Interior Design",
+     "$5.99"
+    ],
+    [
+     "Floor plan creator",
+     "$6.99"
+    ],
+    [
+     "Architecture",
+     "$14.99"
+    ],
+    [
+     "6 Months Subscription",
+     "$34.99"
+    ],
+    [
+     "Weekly Business",
+     "$17.99"
+    ],
+    [
+     "Floor plan creator",
+     "$74.99"
+    ],
+    [
+     "Floor plan creator",
+     "$12.99"
+    ],
+    [
+     "6 Months Subscription",
+     "$29.99"
+    ],
+    [
+     "Floor plan creator",
+     "$8.99"
+    ],
+    [
+     "Design &amp; Room maker",
+     "$49.99"
+    ]
+   ],
+   "reviews": {
+    "n": 50,
+    "low": 18,
+    "high": 27,
+    "from": "2026-06-14",
+    "to": "2026-08-09"
+   }
+  },
+  "home-design-3d": {
+   "id": 463768717,
+   "name": "Home Design 3D: Draw & Plan",
+   "seller": "Home Design 3D srl",
+   "url": "https://apps.apple.com/us/app/id463768717",
+   "version": "5.10",
+   "version_date": "2026-10-06",
+   "rating": 4.3,
+   "rating_count": 104869,
+   "price": "Free",
+   "size_mb": 987,
+   "min_ios": "15.0",
+   "languages": [
+    "NL",
+    "EN",
+    "FI",
+    "FR",
+    "DE",
+    "ID",
+    "IT",
+    "JA",
+    "KO",
+    "NB",
+    "PL",
+    "PT",
+    "RU",
+    "ZH",
+    "ES",
+    "SV",
+    "ZH",
+    "TR"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "Weekly premium",
+     "$4.99"
+    ],
+    [
+     "Monthly Plan",
+     "$12.99"
+    ],
+    [
+     "Annual Plan",
+     "$44.99"
+    ],
+    [
+     "Annual Plan",
+     "$79.99"
+    ],
+    [
+     "Annual Plan",
+     "$44.99"
+    ],
+    [
+     "yearly premium",
+     "$59.99"
+    ],
+    [
+     "Monthly Plan",
+     "$22.99"
+    ],
+    [
+     "Monthly Plan",
+     "$19.99"
+    ],
+    [
+     "Weekly premium",
+     "$4.99"
+    ],
+    [
+     "Annual Plan",
+     "$69.99"
+    ]
+   ],
+   "reviews": {
+    "n": 50,
+    "low": 33,
+    "high": 14,
+    "from": "2026-06-10",
+    "to": "2026-10-18"
+   }
+  },
+  "keyplan-3d": {
+   "id": 983655856,
+   "name": "Keyplan 3D Lite - Home design",
+   "seller": "Quasarts LLC",
+   "url": "https://apps.apple.com/us/app/id983655856",
+   "version": "1.9.9",
+   "version_date": "2026-08-10",
+   "rating": 4.5,
+   "rating_count": 52757,
+   "price": "Free",
+   "size_mb": 663,
+   "min_ios": "16",
+   "languages": [
+    "EN",
+    "FR",
+    "DE",
+    "IT",
+    "JA",
+    "KO",
+    "PT",
+    "RU",
+    "ZH",
+    "ES"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "Standard version",
+     "$5.99"
+    ],
+    [
+     "Outside",
+     "$1.99"
+    ],
+    [
+     "Kitchen",
+     "$1.99"
+    ],
+    [
+     "Bathroom",
+     "$1.99"
+    ],
+    [
+     "Family",
+     "$1.99"
+    ],
+    [
+     "Bedroom pack",
+     "$1.99"
+    ],
+    [
+     "Living room pack",
+     "$2.99"
+    ],
+    [
+     "Reward",
+     "$2.99"
+    ],
+    [
+     "Entertainment Pack",
+     "$1.99"
+    ],
+    [
+     "Garage pack",
+     "$2.99"
+    ]
+   ],
+   "reviews": {
+    "n": 50,
+    "low": 10,
+    "high": 27,
+    "from": "2025-10-16",
+    "to": "2026-10-17"
+   }
+  },
+  "live-home-3d": {
+   "id": 1066784070,
+   "name": "Live Home 3D - House Design",
+   "seller": "Belight Software, ltd",
+   "url": "https://apps.apple.com/us/app/id1066784070",
+   "version": "5.0.6",
+   "version_date": "2026-09-30",
+   "rating": 4.6,
+   "rating_count": 19107,
+   "price": "Free",
+   "size_mb": 554,
+   "min_ios": "17.0",
+   "languages": [
+    "EN",
+    "FR",
+    "DE",
+    "IT",
+    "JA",
+    "PL",
+    "PT",
+    "RU",
+    "ZH",
+    "ES",
+    "UK"
+   ],
+   "ipad": true,
+   "genre": "Lifestyle",
+   "in_app_purchases": [
+    [
+     "Pro Features - 1 Month",
+     "$14.99"
+    ],
+    [
+     "Standard Features - 1 Month",
+     "$5.99"
+    ],
+    [
+     "Pro Features - Lifetime",
+     "$129.99"
+    ],
+    [
+     "Pro Features - 1 Year",
+     "$39.99"
+    ],
+    [
+     "Standard Features - Lifetime",
+     "$59.99"
+    ],
+    [
+     "Standard Features - 1 Year",
+     "$19.99"
+    ],
+    [
+     "50 Houses Pack",
+     "$5.99"
+    ],
+    [
+     "Scandinavian Furniture",
+     "$5.99"
+    ],
+    [
+     "Additional Materials",
+     "$5.99"
+    ],
+    [
+     "Outdoor Object Collection",
+     "$5.99"
+    ]
+   ],
+   "reviews": {
+    "n": 50,
+    "low": 12,
+    "high": 31,
+    "from": "2025-07-01",
+    "to": "2026-04-07"
+   }
+  },
+  "draft-paper": {
+   "id": 911636555,
+   "name": "Draft Paper",
+   "seller": "Giles Goddard",
+   "url": "https://apps.apple.com/us/app/id911636555",
+   "version": "1.19.6",
+   "version_date": "2026-09-13",
+   "rating": 4.4,
+   "rating_count": 15853,
+   "price": "Free",
+   "size_mb": 2,
+   "min_ios": "15.0",
+   "languages": [
+    "EN"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "All Features",
+     "$9.99"
+    ]
+   ],
+   "reviews": {
+    "n": 100,
+    "low": 44,
+    "high": 40,
+    "from": "2024-08-23",
+    "to": "2026-10-16"
+   }
+  },
+  "drawplan": {
+   "id": 1451755778,
+   "name": "DrawPlan",
+   "seller": "Fleet Investments LLC",
+   "url": "https://apps.apple.com/us/app/id1451755778",
+   "version": "5.0.14",
+   "version_date": "2026-05-30",
+   "rating": 3.5,
+   "rating_count": 5315,
+   "price": "Free",
+   "size_mb": 84,
+   "min_ios": "13.0",
+   "languages": [
+    "EN"
+   ],
+   "ipad": true,
+   "genre": "Productivity",
+   "in_app_purchases": [
+    [
+     "DrawPlan Monthly Subscription",
+     "$2.99"
+    ],
+    [
+     "Draw Plan Yearly Subscription",
+     "$29.99"
+    ],
+    [
+     "DrawPlan Plus (Monthly)",
+     "$4.99"
+    ],
+    [
+     "DrawPlan Plus (Yearly)",
+     "$49.99"
+    ],
+    [
+     "DrawPlan Pro (Monthly)",
+     "$9.99"
+    ],
+    [
+     "DrawPlan Pro (Yearly)",
+     "$99.99"
+    ],
+    [
+     "AI Credits (500)",
+     "$4.99"
+    ],
+    [
+     "AI Credits (2000)",
+     "$19.99"
+    ],
+    [
+     "AI Credits (1000)",
+     "$9.99"
+    ]
+   ],
+   "reviews": {
+    "n": 100,
+    "low": 73,
+    "high": 20,
+    "from": "2024-06-16",
+    "to": "2026-10-04"
+   }
+  }
+ }
+}
