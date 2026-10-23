@@ -82,8 +82,9 @@ def apply_masks(img, name):
 
 
 def add_island(img):
-    """Simulator screenshots leave out the Dynamic Island (the system draws it above the app); the
-    store raws have it. Same pill as the store set's config.json, in fractions of the screen width."""
+    """Simulator screenshots leave out the Dynamic Island (the system draws it above the app), and the
+    test iPhone has a notch; the store raws have the island. Same pill as the store set's config.json,
+    in fractions of the screen width."""
     w = img.width
     iw, ih, top = w * 0.286, w * 0.0855, w * 0.0318
     ImageDraw.Draw(img).rounded_rectangle([(w - iw) / 2, top, (w + iw) / 2, top + ih], radius=ih / 2, fill=(0, 0, 0, 255))
@@ -105,7 +106,10 @@ def frame(src, name, camera=False):
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for name, raw in SHOTS.items():
-        frame(os.path.join(RAW, raw), name)
+        # The same phone as ours, Dynamic Island included (the test iPhone has a notch, which leaves
+        # the top centre of its status bar empty); a landscape capture keeps the plain shell.
+        src = os.path.join(RAW, raw)
+        frame(src, name, camera=Image.open(src).height > Image.open(src).width)
     for name, raw in OURS.items():
         src = os.path.join(RAW, raw)
         if os.path.isfile(src):
