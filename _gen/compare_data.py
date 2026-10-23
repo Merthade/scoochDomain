@@ -455,8 +455,8 @@ VERSUS = {
     pick_them="you are planning a house or a renovation over several floors and want to see it in 3D.",
     pick_us="you have the room already and want to know whether the furniture fits, for one price.",
     them_stronger=[
-        ("Whole houses", "Several floors, adjustable wall thickness, height and angles, roofs, and a 3D walkthrough with VR export."),
-        ("Thousands of items", "Far more than Scooch's 37 everyday pieces, with sizes you can change: 584 under Living room alone in our test. Handy for styling a house; for checking one sofa against one wall, it is mostly scrolling."),
+        ("Whole houses", "Several floors, adjustable wall thickness, height and angles, roofs, and a 3D walkthrough with VR export: the right toolbox for a house that is not built yet. In a room you already live in, the walls and the roof are given, and what is left to decide is the furniture."),
+        ("Thousands of items", "Far more than Scooch's 37 everyday pieces, with sizes you can change: 584 under Living room alone in our test. Handy for styling a house. Your own sofa, or the one in the shop, is unlikely to be among them, though, so checking it means minutes of scrolling for a near match that you then resize to its real measurements anyway."),
         ("Blueprints", "Import an existing plan and draw over it."),
     ],
     us_stronger=[
@@ -495,9 +495,9 @@ VERSUS = {
     pick_them="you want to build a home's shape freely and decorate it in 3D, at the lowest one-time price here.",
     pick_us="you want exact furniture sizes and a warning when something does not fit.",
     them_stronger=[
-        ("Any shape", "Walls go wherever you draw them; Scooch's rooms are rectangles you join into an L or a U."),
-        ("3D and decoration", "Edit in 3D and paint or texture any surface."),
-        ("Price", "Its Standard version is $5.99 once, less than Scooch's $9.99. Object packs are extra, from $1.99 each."),
+        ("Any shape", "Walls go wherever you draw them, handy for an odd-shaped house. Most rooms are rectangles, though, and an L or a U is two or three of them joined, which is how Scooch builds them."),
+        ("3D and decoration", "Edit in 3D and paint or texture any surface. Good for trying a colour; it does not change whether the wardrobe door clears the bed."),
+        ("Price", "Its Standard version is $5.99 once, less than Scooch's $9.99. Object packs are extra, from $1.99 each, so two of them bring it to about Scooch's price."),
     ],
     us_stronger=[
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. Keyplan's listing does not describe a check like that, and we did not get to test one."),
@@ -535,8 +535,8 @@ VERSUS = {
     pick_them="you want to scan a room and design it in 3D with renders and brand-name products.",
     pick_us="you want to check what fits at exact sizes, for one clear price.",
     them_stronger=[
-        ("It scans and measures", "A built-in 3D scanner and a digital tape measure. With Scooch you measure the room yourself."),
-        ("3D, renders and real products", "Layouts in 2D and 3D with realistic renders, and brand-name furniture at its listed size. On the free tier, though, it offers up to 45 items per category."),
+        ("It scans and measures", "A built-in 3D scanner and a digital tape measure, so the room's size comes from the phone. The sofa still in the shop cannot be scanned: its size comes from the product page, and the fit comes down to those numbers either way. With Scooch you measure the room yourself and type them in."),
+        ("3D, renders and real products", "Layouts in 2D and 3D with realistic renders, and 564,000+ brand-name products at their listed size. That only helps if your sofa is one of them: a lookalike of another size says nothing about yours. On the free tier, it offers up to 45 items per category."),
         ("Languages", "30 languages, the most of any app compared here; Scooch has 16."),
     ],
     us_stronger=[
@@ -577,9 +577,9 @@ VERSUS = {
     pick_them="you want to see the room in 3D, furnish it from thousands of items and render it.",
     pick_us="you need exact sizes and a clear answer on what fits, without an account or a subscription.",
     them_stronger=[
-        ("3D and renders", "Planner 5D switches between 2D and 3D and renders photo-like images. Scooch is 2D only."),
-        ("A huge catalogue", "Over 8,400 furniture and decor items with premium, against Scooch's 37 everyday pieces. On the free tier, about half the sofas we saw were locked."),
-        ("Camera capture and AI", "It can capture a room in 3D with the phone's camera and generate designs with AI."),
+        ("3D and renders", "Planner 5D switches between 2D and 3D and renders photo-like images, good for seeing a style before you commit to it. Whether the sofa clears the door is a question of centimetres, though, and those show best in the plan from above."),
+        ("A huge catalogue", "Over 8,400 furniture and decor items with premium, against Scooch's 37 everyday pieces. It sounds like your sofa will be in there, but the odds are it is not. You scroll for minutes for something close, and then its size still has to match yours, which its listing says the free version cannot change. On the free tier, about half the sofas we saw were locked anyway."),
+        ("Camera capture and AI", "It can capture a room in 3D with the phone's camera and generate designs with AI. An AI design picks furniture for you; the question you came with, whether yours fits, stays open. Its Ask Copilot button floats over the top of the plan the whole time, about 40% of the screen's width."),
         ("More platforms and languages", "It runs across platforms and on Vision Pro, in 24 languages to Scooch's 16."),
     ],
     us_stronger=[
@@ -591,6 +591,7 @@ VERSUS = {
     ],
     we_dont=[
         ("Work in 3D or render.", "Scooch is 2D: it shows real sizes, door swings and the space drawers need, not a 3D view."),
+        ("Make you search a catalogue.", "Place a sofa, type the size from its product page or your tape measure, and you know whether it fits. 37 everyday pieces cover the usual furniture, and a drawing tool covers the rest."),
         ("Ask for an account.", "Nothing to sign up for; plans sync through your own iCloud."),
         ("Run trials or countdown offers.", "$9.99 once, the same for everyone."),
     ],
@@ -606,6 +607,7 @@ VERSUS = {
              "plan or a 30-day trial, and closing it brought up an offer of 80% off the first year. Scooch is a free "
              "download; planning needs a one-time $9.99 unlock."),
     faq=[
+        ("Do I need a big furniture catalogue to check a fit?", "No. What decides a fit is the size of your piece, from a tape measure or the product page. A catalogue rarely has your exact sofa, so you end up resizing a near match anyway. Scooch starts from the size: 37 everyday pieces you resize to the centimetre, and a drawing tool for anything else."),
         ("Is Planner 5D free?", "It is free to download with a limited catalogue, but it asked us for an account before the first room. On the free tier about half the sofas we saw were locked, and its listing says furniture customization needs premium."),
         ("Does Scooch work in 3D?", "No. Scooch is 2D. It shows real sizes, door swings and the space drawers and sofa beds need, but not a 3D view."),
         ("Which one tells me if a sofa will fit?", "Scooch outlines furniture in red when it overlaps or sticks out of the room. In our test (Planner 5D 5.13.1, 23 October 2026), a coffee table moved onto the sofa was not flagged."),
@@ -622,9 +624,9 @@ VERSUS = {
     pick_them="you work in remodeling, restoration or insurance claims and need plans, photos and estimates from the camera.",
     pick_us="you are at home asking whether a sofa, bed or table will fit, and want one price instead of a plan.",
     them_stronger=[
-        ("It measures for you", "magicplan builds the floor plan from the phone's camera. With Scooch you measure the room and type its size."),
-        ("Made for jobs", "Photos, notes, forms, 360° panoramas, reports and estimates sit on the plan, and it connects to Xactimate and CoreLogic."),
-        ("A long track record", "Years on the App Store and far more ratings than Scooch, which is new."),
+        ("It measures for you", "magicplan builds the floor plan from the phone's camera. When it works, that is quick; recent reviews describe scans that miss closets, walls or doors. For the one room you are furnishing, a tape measure takes a few minutes, and you need it for the furniture anyway. With Scooch you measure the room and type its size."),
+        ("Made for jobs", "Photos, notes, forms, 360° panoramas, reports and estimates sit on the plan, and it connects to Xactimate and CoreLogic. That is what its prices pay for, from $129.99 a year. At home, with no one to bill, it is paperwork you will not use."),
+        ("A long track record", "Years on the App Store and far more ratings than Scooch, which is new. Popular with the people it is built for, remodelers and claims adjusters, which says little about whether it helps you check one sofa."),
     ],
     us_stronger=[
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, in magicplan's furnished demo flat, the coffee table moved onto the sofa without a word."),
@@ -665,9 +667,9 @@ VERSUS = {
     pick_them="you want detailed 3D design, renders and video, on Apple devices and Windows.",
     pick_us="you only need to know whether your furniture fits, for $9.99 once.",
     them_stronger=[
-        ("Full 3D design", "Walkthroughs, renders, flyover videos, roofs, terrain and lighting."),
-        ("Scanning", "A LiDAR room scanner on devices that have the sensor; with Scooch you measure."),
-        ("Catalogue and platforms", "5,000+ items and 3,000+ materials, and versions for Mac and Windows."),
+        ("Full 3D design", "Walkthroughs, renders, flyover videos, roofs, terrain and lighting: a full toolbox for designing a house. For checking whether one sofa fits the room you have, nearly all of it stays unused."),
+        ("Scanning", "A LiDAR room scanner, on the Pro iPhones and iPads that have the sensor. On any other iPhone you measure by hand, as with Scooch, and the furniture you are buying is measured from its product page either way."),
+        ("Catalogue and platforms", "5,000+ items and 3,000+ materials, and versions for Mac and Windows. Thousands of items still rarely include your own sofa, so the check comes down to a near match and the numbers on its product page."),
     ],
     us_stronger=[
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, in Live Home 3D's furnished studio sample, the corner sofa went over the coffee table and an armchair without a word."),
@@ -707,7 +709,7 @@ VERSUS = {
     pick_them="you want a general drafting tool with layers and DXF export, on an older iPhone too.",
     pick_us="you want rooms and furniture that already know their sizes, and a warning when they do not fit.",
     them_stronger=[
-        ("It draws anything", "Lines, shapes, text and measurements on up to 10 layers, not only rooms and furniture."),
+        ("It draws anything", "Lines, shapes, text and measurements on up to 10 layers, not only rooms and furniture. The flip side is that it knows nothing about what you draw: every sofa and bed is a rectangle you size by hand, and when we drew a sofa against a wall, the two merged into one outline."),
         ("CAD export", "It exports DXF, so the drawing opens in CAD software."),
         ("Older iPhones", "It runs on iOS 15 or later; Scooch needs iOS 26."),
     ],
@@ -746,7 +748,7 @@ VERSUS = {
     pick_us="you are furnishing your own home and want to know what fits, without a subscription.",
     them_stronger=[
         ("Tracing", "Import a plan or photo and draw over it."),
-        ("Drawing help", "Free sketching or to-scale drawing, plus AI that helps lay out the plan."),
+        ("Drawing help", "Free sketching or to-scale drawing, plus AI that helps lay out the plan. The AI runs on credits sold separately, from $4.99 to $19.99 (US)."),
         ("Older iPhones and more languages", "It runs on iOS 15 or later, in 38 languages; Scooch needs iOS 26 and has 16."),
     ],
     us_stronger=[
