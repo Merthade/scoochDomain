@@ -235,7 +235,29 @@ def table(head_cells, rows):
 </div>"""
 
 
+_VERSIONS = {}
+
+
+def _v(rel):
+    """Content hash of a site file, so a changed stylesheet or a recaptured screenshot under the same name
+    is fetched again (AlarmPlanner, 2026-10-23: new badges showed unstyled from a cached styles.css)."""
+    if rel not in _VERSIONS:
+        import hashlib
+        with open(os.path.join(SITE, rel), "rb") as f:
+            _VERSIONS[rel] = hashlib.sha1(f.read()).hexdigest()[:8]
+    return _VERSIONS[rel]
+
+
+def _busted(text):
+    text = text.replace('href="/styles.css"', f'href="/styles.css?v={_v("styles.css")}"')
+    return re.sub(r'src="/(assets/[^"?]+\.(?:webp|png|jpg|svg))"',
+                  lambda m: f'src="/{m.group(1)}?v={_v(m.group(1))}"' if os.path.isfile(os.path.join(SITE, m.group(1)))
+                  else m.group(0), text)
+
+
 def write(rel, text):
+    if rel.endswith(".html"):
+        text = _busted(text)
     path = os.path.join(SITE, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -1312,7 +1334,7 @@ for _a in C.APPS:
 US = C.APPS[0]
 COMPARE_URLS = [f"{DOMAIN}/compare/"] + [f"{DOMAIN}{VS_URL(a['key'])}" for a in C.APPS if a["vs"]]
 
-FN = {"about": "*", "price": "**", "listing": "***"}
+FN = {"about": "*", "price": "**", "listing": "***", "test": "†"}
 
 
 def fn(key):
@@ -1323,11 +1345,19 @@ def footnotes(about_extra=""):
     notes = [
         ("about", "We make Scooch, so weigh our view accordingly. Facts about the other apps come from their US "
                   "App Store listings, purchase lists, privacy labels and public US reviews, checked on "
-                  f"{C.CHECKED}.{about_extra}"),
-        ("price", "US App Store prices. “Cost for the first year” is the one-time price or the cheapest listed "
-                  "plan that covers 12 months, whichever is lower; a cross means it costs more than Scooch's $9.99, "
-                  "a dash that the listing does not say."),
+                  f"{C.CHECKED}, and from using each app ourselves.{about_extra}"),
+        ("price", "US App Store prices. The US list does not name plan lengths, so a plan's length comes from the "
+                  "app's own upgrade screen, and a US price is used only where it clearly matches that plan. "
+                  "“Cost for one year if subscribed” is the cheapest listed plan that covers 12 months. A mark on "
+                  "“Pay once” only says whether a one-time unlock exists; “6× ours” compares a price with "
+                  "Scooch's $9.99 once."),
         ("listing", "As each listing describes it. A dash means the listing does not say, not that the app cannot do it."),
+        ("test", f"What we saw using each app ourselves, on {C.TESTED_WHEN}, on {C.TESTED_ON}; screens from "
+                 "that account show euro prices, the prices on this page are the US ones. Offers can differ by "
+                 "country and change over time. On “Plan without paying”, a tick means free with no ads, amber "
+                 "means free with ads, an account or locked parts, a cross means a payment or a trial comes first, "
+                 "and a dash that we could not open the app. “Warns when furniture does not fit” is what happened "
+                 "when we put two pieces on the same spot, or one through a wall."),
     ]
     return ('<div class="footnotes">\n' + "\n".join(
         f'    <p id="fn-{k}"><span class="fn-mark">{FN[k]}</span> {html.escape(t)}</p>' for k, t in notes)
@@ -1342,11 +1372,14 @@ _CROSS = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><p
           'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>')
 _DASH = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path d="M4.5 8h7" fill="none" '
          'stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>')
+_WARN = ('<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path d="M8 3.6v5.6" fill="none" '
+         'stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><circle cx="8" cy="12.4" r="1.35" '
+         'fill="currentColor"/></svg>')
 
 
 def mark_cell(text):
-    """"Yes..." gets a check, "No..." a cross, "Not stated/listed/described" a dash. The word stays
-    in the page for screen readers and search engines."""
+    """"Yes..." gets a check, "No..." a cross, "Not stated/listed/described/tested" a dash. The word
+    stays in the page for screen readers and search engines."""
     def note(rest):
         rest = rest.strip()
         return f' <span class="mark-note">{html.escape(rest[0].upper() + rest[1:])}</span>' if rest else ""
@@ -1354,7 +1387,7 @@ def mark_cell(text):
         return f'<span class="mark yes">{_CHECK}<span class="sr-only">Yes</span></span>{note(text[m.end():])}'
     if m := _NO.match(text):
         return f'<span class="mark no">{_CROSS}<span class="sr-only">No</span></span>{note(text[m.end():])}'
-    if text.startswith(("Not stated", "Not listed", "Not described")):
+    if text.startswith(("Not stated", "Not listed", "Not described", "Not tested")):
         return f'<span class="mark unknown">{_DASH}</span> <span class="mark-note">{html.escape(text)}</span>'
     return html.escape(text)
 
@@ -1377,24 +1410,54 @@ def update_cell(a):
     return label
 
 
-def _amounts(text):
-    return [float(x) for x in re.findall(r"\$(\d+(?:\.\d+)?)", text or "")]
+# Can you plan without paying? One set of marks for every table and price box (compare_data.FREE_TIER).
+_TIER_MARK = {"free": ("yes", _CHECK, "Yes"), "limited": ("warn", _WARN, "Limited"), "none": ("no", _CROSS, "No"),
+              "untested": ("unknown", _DASH, "Not tested")}
 
 
-def first_year(a):
-    """The one-time price or the cheapest plan covering 12 months, whichever is lower; None = unstated."""
-    costs = []
-    if _YES.match(a["once"]):
-        costs += _amounts(a["once"])[:1]
-    costs += _amounts(a["year"])[:1]
-    return min(costs) if costs else None
+def tier_mark(tier):
+    cls, svg, word = _TIER_MARK[tier]
+    return f'<span class="mark {cls}">{svg}<span class="sr-only">{word}</span></span>'
 
 
-def first_year_cell(a):
-    cost = first_year(a)
-    if cost is None:
-        return mark_cell("Not stated on the listing")
-    return mark_cell(("Yes, " if cost <= C.OUR_ONCE else "No, ") + f"${cost:.2f}")
+def free_cell(a):
+    tier, note = C.FREE_TIER[a["key"]]
+    return f'{tier_mark(tier)} <span class="mark-note">{html.escape(note[0].upper() + note[1:])}</span>'
+
+
+def _cheapest(text):
+    """"$44.99 to $79.99" -> 44.99; no price -> None."""
+    found = [float(x) for x in re.findall(r"\$(\d+(?:\.\d+)?)", text or "")]
+    return min(found) if found else None
+
+
+def times_badge(a, text):
+    """How many times Scooch's $9.99 once a price is; nothing for ours or for no price. Marks say whether
+    an option exists; how a price compares is this badge (brand.md 2026-10-20, rule 15)."""
+    amount = _cheapest(text)
+    if a is US or amount is None:
+        return ""
+    x = amount / C.OUR_ONCE
+    label = f"{x:.0f}×" if x >= 10 else f"{x:.1f}".rstrip("0").rstrip(".") + "×"
+    return (f' <span class="times{" more" if x > 1.05 else ""}" title="Compared with Scooch\'s '
+            f'${C.OUR_ONCE:.2f} one-time unlock">{label} ours</span>')
+
+
+def once_cell(a):
+    """Pay once: a check when a one-time unlock exists (whatever it costs), a cross when it does not."""
+    text = a["once"]
+    if m := _YES.match(text):
+        return mark_cell(text) + times_badge(a, text[m.end():])
+    return mark_cell(text)
+
+
+def year_cell(a):
+    """Cheapest 12 months as a price, no mark; the badge says how it compares with ours."""
+    if a["year"] is None:
+        return '<span class="mark-note">No subscription</span>'
+    if _cheapest(a["year"]) is None:
+        return mark_cell(a["year"])
+    return f'<span class="mark-note">{html.escape(a["year"])}</span>{times_badge(a, a["year"])}'
 
 
 def rating_cell(a):
@@ -1432,10 +1495,83 @@ def li(items):
     return "\n".join(f"        <li>{html.escape(x)}</li>" for x in items)
 
 
+def _img(path, alt):
+    from PIL import Image
+    w, h = Image.open(os.path.join(SITE, path.lstrip("/"))).size
+    return f'<img class="screen" src="{path}" alt="{html.escape(alt)}" loading="lazy" width="{w}" height="{h}">'
+
+
 def our_shot(key):
+    """Ours beside the about box and on our roundup card (compare_data.OUR_SHOT)."""
     f, alt = C.OUR_SHOT[key]
-    return (f'<figure>\n  <img class="screen" src="/assets/{f}.webp" alt="{html.escape(alt)}" loading="lazy" '
-            f'width="640" height="1284">\n  <figcaption>Scooch {US["version"]}</figcaption>\n</figure>')
+    return f'<figure>\n  {_img(f"/assets/{f}.webp", alt)}\n  <figcaption>Scooch {US["version"]}</figcaption>\n</figure>'
+
+
+MISSING_SHOTS = set()
+
+
+def their_shot(app, slot):
+    """Our own capture of the other app for one slot (compare_data.THEIR_SHOTS), or nothing."""
+    spots = C.THEIR_SHOTS.get(app["key"], {})
+    if slot not in spots:
+        return ""
+    path = f"assets/compare/{app['key']}-{slot}.webp"
+    if not os.path.isfile(os.path.join(SITE, path)) or app["key"] not in C.SHOTS_TAKEN:
+        MISSING_SHOTS.add(path)
+        return ""
+    version, taken = C.SHOTS_TAKEN[app["key"]]
+    return (f'<figure>\n  {_img("/" + path, spots[slot])}\n'
+            f'  <figcaption>{html.escape(app["name"])} {version} · {taken}</figcaption>\n</figure>')
+
+
+def our_slot_shot(slot):
+    path, alt, name = C.OUR_SHOTS[slot]
+    return f'<figure>\n  {_img(path, alt)}\n  <figcaption>{name} {US["version"]}</figcaption>\n</figure>'
+
+
+def side_by_side(a):
+    """Row per slot the other app has: their screen, ours next to it, or a card where we have no such screen."""
+    spots = C.THEIR_SHOTS.get(a["key"], {})
+    rows = []
+    for slot, title in C.SLOTS:
+        theirs = their_shot(a, slot)
+        if not theirs:
+            continue
+        title = C.SLOT_TITLES.get(a["key"], {}).get(slot, title)
+        if slot in C.OUR_SHOTS:
+            ours = our_slot_shot(slot)
+        else:
+            head, text = C.OUR_NONE[slot]
+            ours = (f'<div class="sbs-none"><span class="mark yes">{_CHECK}</span><strong>{html.escape(head)}</strong>'
+                    f'<span>{html.escape(text)}</span></div>')
+        rows.append(f'  <div class="sbs-row">\n    <h3>{html.escape(title)}</h3>\n    <p>{html.escape(spots[slot])}.</p>\n'
+                    f'    <div class="sbs-pair">\n    {theirs}\n    {ours}\n    </div>\n  </div>')
+    if not rows:
+        return ""
+    return (f'<h2 class="app-title">{app_icon(a, 32)}<span>{html.escape(a["short"])} and Scooch, side by side</span></h2>\n'
+            f'  <p>Screens we captured ourselves, {html.escape(a["short"])} on the left, Scooch on the right. Ours ran on '
+            f'an EU App Store account, so prices on screen are in euros.{fn("test")}</p>\n' + "\n".join(rows))
+
+
+def tested(a):
+    if a["key"] not in C.TESTED:
+        return ""
+    return (f'<h2 class="app-title">{app_icon(a, 32)}<span>What we saw using {html.escape(a["short"])}</span></h2>\n'
+            f'  <p>On {C.TESTED_WHEN}, on {C.TESTED_ON}.{fn("test")}</p>\n  <ul>\n{li(C.TESTED[a["key"]])}\n  </ul>')
+
+
+def we_dont(v):
+    """What we leave out, for this page's reader: (lead, why) pairs; our generic cons where a page has none."""
+    if "we_dont" not in v:
+        return li(US["cons"])
+    return "\n".join(f"        <li><strong>{html.escape(h)}</strong> {html.escape(t)}</li>" for h, t in v["we_dont"])
+
+
+def maker_note(v):
+    if not v.get("maker_note"):
+        return ""
+    return (f'  <div class="maker-note"><p>{html.escape(v["maker_note"])}</p>'
+            f'<p class="maker-by">Emils, who makes Scooch</p></div>')
 
 
 def faq_html(faq):
@@ -1468,30 +1604,38 @@ def compare_jsonld(headline, desc, canonical, crumbs, faq=None, itemlist=None):
 
 
 def price_card(a):
-    """Big figures for what the listing states, the full plan list below as fine print."""
-    tiles = []
-    if a is US:
-        tiles.append(("Free version", "Intro only", "planning needs the unlock"))
+    """The card's price box: the free version, a year, and a one-time unlock, each with the same marks and
+    "× ours" badges as the tables; the full plan list below as fine print."""
+    tier, tier_note = C.FREE_TIER[a["key"]]
+    if a["key"] in C.FREE_TILE:
+        free_value, free_unit = C.FREE_TILE[a["key"]]
     else:
-        tiles.append(("Download", "Free", "paid upgrade inside" if a["year"] is None else "paid plans inside"))
-    if a["year"] and _amounts(a["year"]):
-        tiles.append(("Per year", a["year"], "if subscribed"))
+        free_value, free_unit = ("Free" if tier in ("free", "limited") else "Not tested" if tier == "untested" else "None"), tier_note
+    tiles = [("Free version", free_value, free_unit, tier if tier != "untested" else "", tier_mark(tier), "")]
+    if a["year"] and _cheapest(a["year"]) is not None:
+        value, _, extra = a["year"].partition(", ")
+        tiles.append(("Per year", value, f"if subscribed, {extra}" if extra else "if subscribed",
+                      "", "", times_badge(a, a["year"])))
     if m := _YES.match(a["once"]):
-        tiles.append((f'Pay once{fn("price") if a is US else ""}', a["once"][m.end():], "no subscription"))
+        once = a["once"][m.end():]
+        amount = re.search(r"\$\d+(?:\.\d+)?", once)
+        tiles.append((f'Pay once{fn("price") if a is US else ""}', amount.group(0) if amount else once,
+                      "lifetime" if "lifetime" in once else "no subscription", "", tier_mark("free"),
+                      times_badge(a, once)))
     elif _NO.match(a["once"]):
-        tiles.append(("Pay once", "Not offered", "subscription only"))
+        tiles.append(("Pay once", "Not offered", "subscription only", "none", tier_mark("none"), ""))
     if len(tiles) == 1:
         # Neither a yearly nor a one-time price is stated: show the listed range rather than hide it.
         amounts = re.findall(r"\$\d+(?:\.\d+)?", a["price"])
         if amounts:
             lo = min(amounts, key=lambda x: float(x[1:]))
             hi = max(amounts, key=lambda x: float(x[1:]))
-            tiles.append(("Paid plans", f"{lo} to {hi}", "lengths not listed"))
+            tiles.append(("Paid plans", f"{lo} to {hi}", "lengths not listed", "", "", ""))
     tile_html = "".join(
-        f'<div class="price-tile{" free" if v == "Free" else ""}"><span class="price-label">{l}</span>'
-        f'<span class="price-amount">{html.escape(v)}</span><span class="price-unit">{u}</span></div>'
-        for l, v, u in tiles)
-    note = re.sub(r"^Free( download| with limits| version[^.]*)?[.;] ?", "", a["price"])
+        f'<div class="price-tile{" " + cls if cls else ""}"><span class="price-label">{mark}{label}</span>'
+        f'<span class="price-amount">{html.escape(value)}{badge}</span><span class="price-unit">{html.escape(unit)}</span></div>'
+        for label, value, unit, cls, mark, badge in tiles)
+    note = re.sub(r"^Free( download| with limits| version[^.]*| with a sign-up[^.]*)?[.;] ?", "", a["price"])
     note = note[0].upper() + note[1:] if note else ""
     return (f'<div class="price-card{" ours" if a is US else ""}"><div class="price-tiles">{tile_html}</div>'
             + (f'<p class="price-note">{html.escape(note)}{fn("price")}</p>' if a is not US and note else "")
@@ -1505,12 +1649,15 @@ def _ours(a):
 FLIP_ROWS = [
     ("Best for", lambda a: html.escape(a["best_for"])),
     ("US rating (average)", rating_cell),
-    (f'Pay once, no subscription{fn("price")}', lambda a: mark_cell(a["once"])),
-    (f'Cost for the first year{fn("price")}', first_year_cell),
-    (f'Warns when furniture does not fit{fn("listing")}', lambda a: mark_cell(a["fit"])),
+    (f'Plan without paying{fn("test")}', free_cell),
+    (f'Pay once, no subscription{fn("price")}', once_cell),
+    (f'Cost for one year if subscribed{fn("price")}', year_cell),
+    (f'Warns when furniture does not fit{fn("test")}', lambda a: mark_cell(a["fit"])),
     (f'Furniture at sizes you type{fn("listing")}', lambda a: mark_cell(a["sizes"])),
     (f'3D view{fn("listing")}', lambda a: mark_cell(a["three_d"])),
     (f'Scans the room with the camera{fn("listing")}', lambda a: mark_cell(a["scan"])),
+    (f'No account needed{fn("test")}', lambda a: mark_cell(a["account"])),
+    (f'No ads{fn("test")}', lambda a: mark_cell(a["ads"])),
     ("No tracking (App Store privacy label)", lambda a: mark_cell(a["privacy"])),
     ("Languages", lang_cell),
     ("Last update", update_cell),
@@ -1520,8 +1667,8 @@ VERSIONS = ", ".join(f'{a["name"]} {a["version"]}' for a in C.APPS)
 
 # ---- the roundup ----
 ROUNDUP_TITLE = f"Best Room Planner Apps for iPhone (2026): {len(C.APPS)} Compared"
-ROUNDUP_META = ("Nine iPhone room planner apps side by side: what each is best for, US prices, 3D, scanning, "
-                "privacy, and honest pros and cons. Checked October 2026.")
+ROUNDUP_META = ("Nine iPhone room planner apps, tested side by side: US prices, free versions, whether each warns "
+                "when furniture does not fit, pros and cons. October 2026.")
 heads = "".join(
     f'<th scope="col"{_ours(a)}><a class="app-head" href="#{a["key"]}">{app_icon(a)}<span>{i + 1}. '
     f'{html.escape(a["name"])}</span></a></th>' for i, a in enumerate(C.APPS))
@@ -1531,7 +1678,7 @@ picks = "\n".join(f"    <li><strong>{html.escape(k)}:</strong> {html.escape(v)}<
 cards = []
 for i, a in enumerate(C.APPS):
     vs = f' · <a href="{VS_URL(a["key"])}">Full comparison</a>' if a["vs"] else ""
-    pic = our_shot("scooch") if a is US else ""
+    pic = our_shot("scooch") if a is US else their_shot(a, "plan")  # a plan in the app, never a wall or paywall
     cards.append(f"""<section class="app-card" id="{a['key']}">
   <h2 class="app-title">{app_icon(a, 44)}<span>{i + 1}. {html.escape(a['name'])}</span></h2>
   <p class="app-meta">By {html.escape(a['developer'])} · Best for: {html.escape(a['best_for'])} · {a['rating']}★ average US rating</p>
@@ -1556,7 +1703,7 @@ for i, a in enumerate(C.APPS):
 roundup_body = f"""<article class="article compare">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › Compare</nav>
   <h1>{ROUNDUP_TITLE}</h1>
-  <p class="lede">There is no single best room planner, because people want different things from one. Some want to see a room in 3D, some need to scan it for work, some just need to know whether the sofa fits. Here are {len(C.APPS)} iPhone room planners, what each does best, and where each falls short.{fn("about")}</p>
+  <p class="lede">There is no single best room planner, because people want different things from one. Some want to see a room in 3D, some need to scan it for work, some just need to know whether the sofa fits. Here are {len(C.APPS)} iPhone room planners, what each does best, and where each falls short. One question runs through all of them, and we tested it in each app we could open: when a piece does not fit, does the app tell you?{fn("about")}</p>
   <div class="table-wrap">
     <table class="compare-table flip">
       <thead><tr><th scope="col"><span class="sr-only">Feature</span></th>{heads}</tr></thead>
@@ -1572,7 +1719,7 @@ roundup_body = f"""<article class="article compare">
   </ul>
 {"".join(cards)}
 {faq_html(C.ROUNDUP_FAQ)}
-{cta_html("Check what fits before you buy", "Rooms at their real size, furniture at real sizes, and a warning when something does not fit. $9.99 once.", CT_COMPARE)}
+{cta_html("Check what fits before you buy", "Rooms at their real size, furniture at real sizes, and a red outline when something does not fit. $9.99 once.", CT_COMPARE)}
   <div class="related">
     <h2>One-to-one comparisons</h2>
     <ul>
@@ -1589,7 +1736,7 @@ write("compare/index.html",
                           faq=C.ROUNDUP_FAQ, itemlist=C.APPS)))
 
 # ---- one page per competitor ----
-VS_ROWS = [(plain_label, cell) for plain_label, cell in FLIP_ROWS if not plain_label.startswith("Best for")]
+VS_ROWS = [(label, cell) for label, cell in FLIP_ROWS if not label.startswith("Best for")]
 
 
 def blocks(items):
@@ -1617,6 +1764,7 @@ for a in C.APPS:
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/compare/">Compare</a> › {html.escape(v['label'])}</nav>
   <h1>{html.escape(v['h1'])}</h1>
   <p class="lede">{html.escape(v['lede'])}{fn("about")}</p>
+{maker_note(v)}
   <div class="quick-answer"><p><strong>Pick {html.escape(them)}</strong> if {html.escape(v['pick_them'])}<br><strong>Pick Scooch</strong> if {html.escape(v['pick_us'])}</p></div>
   <div class="table-wrap">
     <table class="compare-table vs">
@@ -1641,15 +1789,17 @@ for a in C.APPS:
     <p><a href="/#features">See all features</a></p>
   </div></div>
   </div>
+  {side_by_side(a)}
+  {tested(a)}
   <h2 class="app-title">{app_icon(US, 32)}<span>What Scooch does not do</span></h2>
   <ul>
-{li(US['cons'])}
+{we_dont(v)}
   </ul>
   {reviews}
   <h2>Pricing</h2>
   <p>{html.escape(v['pricing'])}</p>
 {faq_html(v['faq'])}
-{cta_html("Try Scooch", "Rooms at their real size, furniture at real sizes, and a warning when something does not fit. $9.99 once.", CT_COMPARE)}
+{cta_html("Try Scooch", "Rooms at their real size, furniture at real sizes, and a red outline when something does not fit. $9.99 once.", CT_COMPARE)}
   <div class="related">
     <h2>Other comparisons</h2>
     <ul>
@@ -1664,6 +1814,8 @@ for a in C.APPS:
                compare_jsonld(v["h1"], v["meta"], canonical,
                               [("Home", f"{DOMAIN}/"), ("Compare", f"{DOMAIN}/compare/"), (v["label"], canonical)],
                               faq=v["faq"])))
+if MISSING_SHOTS:
+    print(f"competitor screenshots not taken yet ({len(MISSING_SHOTS)}): " + ", ".join(sorted(MISSING_SHOTS)))
 
 
 # =========================================================================================
