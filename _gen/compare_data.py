@@ -229,7 +229,7 @@ APPS = [
         best_for="To-scale 2D plans for trades and real estate, with tracing",
         summary=("A 2D floor plan app for quick sketches or to-scale drawings with automatic dimensions. You can "
                  "import an image or plan and trace it, save your own objects, and ask its AI to help draw. "
-                 "Premium is a subscription. On our iPhone with iOS 27, it closed itself at every launch."),
+                 "Premium is a subscription. In our tests on iOS 27, it closed itself at every launch."),
         pros=["Free sketching or to-scale drawing",
               "Trace over an imported plan or photo",
               "AI-assisted drawing",
@@ -419,7 +419,7 @@ TESTED = {
         "Pages 3 to 6 carry a padlock; tapping one asks you to unlock every feature, once.",
     ],
     "drawplan": [
-        "On our iPhone with iOS 27.0.1, version 6.0.1 closed itself at every launch, also when we opened it by hand, so we could not test it.",
+        "In our tests on iOS 27.0.1, version 6.0.1 closed itself at every launch, so we could not use it.",
         "Its crash report points at a check iOS 27 now enforces on how apps start. If your iPhone is not on iOS 27 yet, this may not affect you.",
     ],
 }
@@ -744,7 +744,7 @@ VERSUS = {
     h1="DrawPlan alternative: DrawPlan vs Scooch",
     label="Scooch vs DrawPlan",
     lede=("DrawPlan is a 2D drawing tool for plans at work, with tracing and AI help. Scooch is a 2D planner for "
-          "furnishing your own rooms. On our iPhone with iOS 27, DrawPlan closed itself at every launch."),
+          "furnishing your own rooms. In our tests on iOS 27, DrawPlan closed itself at every launch."),
     pick_them="you draw plans for work and want to trace existing drawings, on an iPhone it runs on.",
     pick_us="you are furnishing your own home and want to know what fits, without a subscription.",
     them_stronger=[
@@ -753,7 +753,7 @@ VERSUS = {
         ("Older iPhones and more languages", "It runs on iOS 15 or later, in 38 languages; Scooch needs iOS 26 and has 16."),
     ],
     us_stronger=[
-        ("It opens", "Scooch runs on iOS 26 and iOS 27. On our iPhone with iOS 27.0.1, DrawPlan 6.0.1 closed itself at every launch, also when we opened it by hand."),
+        ("It opens", "Scooch runs on iOS 26 and iOS 27. In our tests on iOS 27.0.1, DrawPlan 6.0.1 closed itself at every launch."),
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. DrawPlan's listing does not describe a check like that."),
         ("Your plans stay yours", "After the one-time unlock every plan opens, exports as PNG or PDF and syncs through your own iCloud. DrawPlan's listing puts sync and clean exports behind a subscription."),
     ],
@@ -772,7 +772,7 @@ VERSUS = {
              "planning needs a one-time $9.99 unlock."),
     faq=[
         ("Is DrawPlan free?", "It is a free download; per its listing, cloud sync, high-resolution exports and exports without grids or watermarks need a subscription, from $2.99 a month or $29.99 a year (US)."),
-        ("Does DrawPlan work on iOS 27?", "Not on our iPhone with iOS 27.0.1: version 6.0.1 closed itself at every launch (23 October 2026). Its crash report points at a check iOS 27 now enforces on how apps start."),
+        ("Does DrawPlan work on iOS 27?", "Not in our tests on iOS 27.0.1: version 6.0.1 closed itself at every launch (23 October 2026). Its crash report points at a check iOS 27 now enforces on how apps start."),
         ("Does DrawPlan warn when furniture will not fit?", "Its listing does not describe a check like that, and we could not open it to test one. Scooch outlines a piece in red when it overlaps another or sticks out of the room."),
     ],
 ),
