@@ -58,8 +58,7 @@ SHOTS = {
     "home-planner-ai-offer": "home-planner-ai-countdown.png",
     "draft-paper-plan": "draft-paper-plan-v2.png",
     "draft-paper-paywall": "draft-paper-paywall.png",
-    # Not a capture: DrawPlan closed at every launch, so this is a stand-in black screen until Emil's
-    # picture replaces the raw (same file name).
+    # Not a capture: DrawPlan closed at every launch, so this is a plain black screen (Emil, 2026-10-23).
     "drawplan-plan": "drawplan-placeholder.png",
 }
 
