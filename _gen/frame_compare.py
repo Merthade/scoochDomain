@@ -58,11 +58,14 @@ SHOTS = {
 }
 
 # Ours, for the slots our existing site shots do not cover: the shipped 1.0.2 (79dbbc5) on an iPhone 17 Pro
-# Max simulator, the showroom fixture; scooch-fit is its coffee table dragged onto the sofa by hand.
+# Max simulator, the showroom fixture as fixed in 1.0.3 `2ec5aa7` (nothing in a door swing or a drawer's pull-out);
+# scooch-fit is its coffee table dragged onto the sofa by hand.
 OURS = {
     "scooch-wall": "scooch-first.png",
     "scooch-paywall": "scooch-paywall.png",
     "scooch-fit": "scooch-fit.png",
+    "scooch-plan": "scooch-plan.png",
+    "scooch-projections": "scooch-projections.png",
 }
 
 MASKS = {}

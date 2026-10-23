@@ -41,13 +41,14 @@ APPS = [
         best_for="Checking that furniture fits a room before you buy or move it",
         summary=("A 2D room planner built around one question: will it fit? You type or drag your rooms to "
                  "their real measurements, place furniture at real sizes, and anything that overlaps another "
-                 "piece or sticks out of the room is outlined in red before you lift it."),
-        pros=["Outlines in red any furniture that overlaps or sticks out of the room",
-              "Every piece resizes to the centimetre, and you can draw your own",
-              "$9.99 once: no subscription, no account, no ads",
-              "iPhone and iPad, synced through your own iCloud"],
+                 "piece or sticks out of the room is outlined in red before you lift it. It also draws the "
+                 "space each wardrobe door, drawer and sofa bed needs to open."),
+        pros=["Outlines in red any furniture that overlaps another piece or sticks out of the room",
+              "Draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you see it opens, not only that it fits",
+              "The everyday pieces at sizes you set, plus a drawing tool for any other piece: no scrolling through hundreds of sofas",
+              "$9.99 once: no subscription, no account, no ads"],
         cons=["Rooms are rectangles: no angled or curved walls",
-              "37 generic pieces: no brand catalogue or decor",
+              "2D only: no 3D view or renders",
               "Needs iOS 26 or later"],
         price="Free download; a guided first room is free, planning needs the one-time unlock, $9.99",
         once="Yes, $9.99", year=None,
@@ -277,26 +278,23 @@ PICKS = [
 # Our app in brief, for the "About Scooch" box on each head-to-head. Shipped (1.0.2) only.
 ABOUT_US = [
     "Rooms drawn at their real measurements, joined into an L or a U",
-    "37 pieces at real sizes, each resized to the centimetre",
-    "Furniture you draw yourself, at any size",
+    "37 everyday pieces at real sizes, each resized to the centimetre",
+    "A drawing tool for any other piece, at any size",
     "Overlaps and pieces outside the room outlined in red",
-    "Door swings, drawers and sofa beds shown with the space they need",
+    "Wardrobe doors, drawers and sofa beds drawn with the space they need to open",
     "PNG and PDF export, metric or imperial, 26 themes",
     "iPhone and iPad, synced through your own iCloud",
 ]
 
 # Our screenshot beside the about box on each head-to-head and on our roundup card: (file stem, alt).
 OUR_SHOT = {
-    "scooch": ("shot-clash", "A 360 cm sofa outlined in red in Scooch because it does not fit the room"),
-    "magicplan": ("shot-plan", "A two-room flat drawn to scale in Scooch, every wall measured"),
-    "planner-5d": ("shot-clash", "A 360 cm sofa outlined in red in Scooch because it does not fit the room"),
-    "home-planner-ai": ("shot-furniture", "The Scooch furniture list with each piece's default size"),
-    "home-design-3d": ("shot-projections", "Furniture doors, drawers and a sofa bed showing the space they need in Scooch"),
-    "keyplan-3d": ("shot-clash", "A 360 cm sofa outlined in red in Scooch because it does not fit the room"),
-    "live-home-3d": ("shot-projections", "Furniture doors, drawers and a sofa bed showing the space they need in Scooch"),
+    "scooch": ("compare/scooch-fit", "A coffee table moved onto the sofa in Scooch: both outlined in red"),
     "draft-paper": ("shot-draw", "Drawing a dining table at 140 by 90 cm in Scooch"),
     "drawplan": ("shot-plans", "Three plans in Scooch: a flat, a studio and an office"),
 }
+for _key in ("magicplan", "planner-5d", "home-planner-ai", "home-design-3d", "keyplan-3d", "live-home-3d"):
+    OUR_SHOT[_key] = ("compare/scooch-projections",
+                      "The wardrobe's doors drawn swinging open in Scooch, clear of the desk below")
 
 # ---- screenshots of the other apps (brand.md Decisions log 2026-10-20) ----
 # Only screens we captured ourselves from the app's current version, each showing a point the page
@@ -359,7 +357,7 @@ THEIR_SHOTS = {
 # Ours, for the side-by-side rows. (asset path, alt, caption). "offer" has no screen of ours: OUR_NONE.
 OUR_SHOTS = {
     "wall": ("/assets/compare/scooch-wall.webp", "Scooch's first screen: the guided first room starts, with no account or sign-in", "Scooch"),
-    "plan": ("/assets/shot-plan.webp", "A two-room flat drawn to scale in Scooch, every wall measured", "Scooch"),
+    "plan": ("/assets/compare/scooch-plan.webp", "Scooch's sample flat at its real measurements, each door swing and drawer pull-out drawn and clear", "Scooch"),
     "catalogue": ("/assets/shot-furniture.webp", "The Scooch furniture list with each piece's default size", "Scooch"),
     "fit": ("/assets/compare/scooch-fit.webp", "Scooch's sample flat with the coffee table moved onto the sofa: both outlined in red", "Scooch"),
     "paywall": ("/assets/compare/scooch-paywall.webp", "Scooch's unlock screen: one payment, yours for good, no subscription", "Scooch"),
@@ -451,17 +449,18 @@ VERSUS = {
     pick_us="you have the room already and want to know whether the furniture fits, for one price.",
     them_stronger=[
         ("Whole houses", "Several floors, adjustable wall thickness, height and angles, roofs, and a 3D walkthrough with VR export."),
-        ("Thousands of items", "Far more than Scooch's 37 generic pieces, with sizes you can change: 584 under Living room alone in our test. Handy for styling a house; for checking one sofa against one wall, it is mostly scrolling."),
+        ("Thousands of items", "Far more than Scooch's 37 everyday pieces, with sizes you can change: 584 under Living room alone in our test. Handy for styling a house; for checking one sofa against one wall, it is mostly scrolling."),
         ("Blueprints", "Import an existing plan and draw over it."),
     ],
     us_stronger=[
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room, so a misfit shows on the plan, not on moving day. In our test, in Home Design 3D's own furnished sample house, we moved the lounge table onto the sofa and it said nothing."),
         ("One price", "$9.99 once. Home Design 3D is a subscription, and recent reviews describe earlier one-time purchases moving to it."),
         ("No tracking", "Home Design 3D's App Store privacy label declares data used to track you, and it asked to track us on first launch; Scooch's label declares none."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Plan houses or floors.", "Scooch plans rooms in 2D. For a whole house over several floors in 3D, Home Design 3D is built for that."),
-        ("Offer hundreds of sofas.", "37 generic pieces you resize to the centimetre, or draw your own at its real size. The question is whether yours fits, not which one to pick."),
+        ("Offer hundreds of sofas.", "37 everyday pieces you resize to the centimetre, and a drawing tool for anything else at its real size. The question is whether yours fits, not which one to pick."),
         ("Ask for a subscription, an account or your data.", "$9.99 once, 0 ads, nothing to sign up for."),
     ],
     reviews=[
@@ -497,6 +496,7 @@ VERSUS = {
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. Keyplan's listing does not describe a check like that, and we did not get to test one."),
         ("Exact furniture sizes", "Every piece resizes to the centimetre, and you can draw your own pieces at any size."),
         ("Upright, in 16 languages", "Scooch works in portrait, the way you hold a phone, in 16 languages. On iPhone, Keyplan 3D runs in landscape only, in 10."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Draw angled walls.", "Rooms are rectangles you join into an L or a U."),
@@ -536,11 +536,12 @@ VERSUS = {
         ("A warning before you lift anything", "Scooch outlines in red any piece that overlaps another or sticks out of the room, so a misfit shows before you buy. Home Planner AI's first screen promises 'real furniture that actually fits', but in our test, in its own furnished template room, it let us put the coffee table on the sofa without a word."),
         ("Typed sizes from the start", "Rooms and furniture take the exact size you type. A recent Home Planner AI review says typing a room's size needed the subscription."),
         ("One clear price, after you have tried it", "The guided first room is free, then $9.99 once. Home Planner AI shows its paywall before the first room, with weekly, monthly and 6-month plans, and its purchase list runs to ten items."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Scan a room.", "You measure it and type the size; a tape measure is all it takes."),
         ("Show it in 3D or render it.", "Scooch is 2D."),
-        ("Sell brand furniture.", "Generic pieces you resize to the centimetre, or draw from a product page's measurements."),
+        ("Sell brand furniture.", "Everyday pieces you resize to the centimetre, and a drawing tool for any piece, from its product page's measurements."),
     ],
     reviews=[
         "a free version too limited to use, including typing a room's size",
@@ -570,7 +571,7 @@ VERSUS = {
     pick_us="you need exact sizes and a clear answer on what fits, without an account or a subscription.",
     them_stronger=[
         ("3D and renders", "Planner 5D switches between 2D and 3D and renders photo-like images. Scooch is 2D only."),
-        ("A huge catalogue", "Over 8,400 furniture and decor items with premium, against Scooch's 37 generic pieces. On the free tier, about half the sofas we saw were locked."),
+        ("A huge catalogue", "Over 8,400 furniture and decor items with premium, against Scooch's 37 everyday pieces. On the free tier, about half the sofas we saw were locked."),
         ("Camera capture and AI", "It can capture a room in 3D with the phone's camera and generate designs with AI."),
         ("More platforms and languages", "It runs across platforms and on Vision Pro, in 24 languages to Scooch's 16."),
     ],
@@ -579,6 +580,7 @@ VERSUS = {
         ("Exact sizes without a subscription", "Every Scooch piece resizes to the centimetre with the one-time unlock. Planner 5D's listing says its free version has no furniture customization."),
         ("One price, no account", "$9.99 once, nothing to sign up for. Planner 5D asked for an account before the first room, then offered a free trial of a yearly plan, and when we closed that, a one-time discount that disappears once closed."),
         ("No tracking", "Planner 5D's App Store privacy label declares data used to track you, and it asked to track us before the first screen; Scooch's label declares none."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Work in 3D or render.", "Scooch is 2D: it shows real sizes, door swings and the space drawers need, not a 3D view."),
@@ -622,6 +624,7 @@ VERSUS = {
         ("Furniture that knows its size", "37 pieces at real sizes, each resized to the centimetre, plus pieces you draw yourself."),
         ("No account, one price", "$9.99 once, nothing to sign up for. magicplan's free Starter plan needs a sign-up and holds 2 projects; its paid plans start at $12.99 a month or $129.99 a year."),
         ("Languages", "Scooch is in 16 languages; magicplan's listing names 5."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Scan a room.", "You measure it and type the size."),
@@ -663,6 +666,7 @@ VERSUS = {
         ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, in Live Home 3D's furnished studio sample, the corner sofa went over the coffee table and an armchair without a word."),
         ("Price", "Everything in Scooch is $9.99 once; Live Home 3D's Standard upgrade is $24.99 a year or $59.99 lifetime, and its free version kept Save greyed out and edits one project at a time."),
         ("Languages", "16 languages to Live Home 3D's 12."),
+        ("Room to open it, not just to stand it", "Scooch draws each wardrobe door's swing, each drawer's pull-out and a sofa bed opened out, so you can see whether the door clears the desk and the drawer clears the bed, not only whether the piece fits."),
     ],
     we_dont=[
         ("Do 3D, renders or video.", "Scooch is 2D, for checking what fits."),
