@@ -307,6 +307,7 @@ SLOTS = [("wall", "Before your first room"), ("plan", "A room with furniture"),
          ("paywall", "The upgrade screen"), ("offer", "Closing the upgrade screen")]
 # Where a slot shows something other than its usual screen, the row says so.
 SLOT_TITLES = {"draft-paper": {"plan": "Drawing a room"}, "keyplan-3d": {"plan": "A room"},
+               "drawplan": {"plan": "Opening the app"},
                "home-design-3d": {"fit": "A table moved onto the sofa"},
                "live-home-3d": {"fit": "The sofa pushed over the coffee table"},
                "home-planner-ai": {"offer": "Back on its home screen"}}
@@ -332,13 +333,13 @@ THEIR_SHOTS = {
         "fit": "The demo flat's living room with the coffee table moved onto the sofa: nothing flagged",
     },
     "keyplan-3d": {
-        "plan": "A 2.22 by 1.55 m room drawn in Keyplan 3D, which runs in landscape on iPhone",
-        "catalogue": "Keyplan 3D's catalogue, each piece with its size in centimetres",
-        "paywall": "Keyplan 3D's shop: the Standard version once, or a starter pack with ten object packs",
+        "plan": "A 2.22 by 1.55 m room drawn in Keyplan 3D, which runs in landscape on iPhone, so its screens stand on their side here",
+        "catalogue": "Keyplan 3D's catalogue, each piece with its size in centimetres, in landscape",
+        "paywall": "Keyplan 3D's shop in landscape: the Standard version once, or a starter pack with ten object packs",
     },
     "live-home-3d": {
         "wall": "Live Home 3D's first screen: a welcome, then My Projects or Create New, with no account",
-        "plan": "Live Home 3D's furnished studio apartment sample in its 2D view, 7.8 by 7.6 m",
+        "plan": "Live Home 3D's furnished studio apartment sample in its 2D view, 7.8 by 7.6 m, its garden trees hidden",
         "fit": "The same studio with the corner sofa pushed over the coffee table and an armchair: nothing flagged",
         "paywall": "Live Home 3D's store: Standard and Pro, each monthly, yearly or for life",
     },
@@ -350,8 +351,11 @@ THEIR_SHOTS = {
         "offer": "Home Planner AI after we closed its paywall: 'Price Crash! HUGE DISCOUNT' with an hour's countdown, and 9 rooms left to add",
     },
     "draft-paper": {
-        "plan": "Draft Paper's drawing tools on a blank sheet: lines, shapes and measurements, no furniture",
+        "plan": "A 3 by 4.5 m living room we drew in Draft Paper: the walls, a sofa, a coffee table, an armchair and a TV unit as rectangles, with one measured line",
         "paywall": "Draft Paper's unlock: every feature for one price",
+    },
+    "drawplan": {
+        "plan": "What DrawPlan 6.0.1 showed us on iOS 27: nothing, it closed at every launch (a stand-in, not a capture)",
     },
 }
 # Ours, for the side-by-side rows. (asset path, alt, caption). "offer" has no screen of ours: OUR_NONE.
@@ -409,6 +413,7 @@ TESTED = {
     ],
     "draft-paper": [
         "A short tutorial, then a blank sheet of grid paper. No account, no prompts and no furniture: you draw every line yourself.",
+        "We drew a living room with its rectangle tool. Zoomed out, lines snap to whole metres; zoomed in, to 10 cm. Shapes that touch merge into one outline, so a sofa drawn against a wall turned into a notch in the wall.",
         "Pages 3 to 6 carry a padlock; tapping one asks you to unlock every feature, once.",
     ],
     "drawplan": [
@@ -425,6 +430,7 @@ SHOTS_TAKEN = {
     "live-home-3d": ("5.1", "23 Oct 2026"),
     "home-planner-ai": ("26.50", "23 Oct 2026"),
     "draft-paper": ("1.19.6", "23 Oct 2026"),
+    "drawplan": ("6.0.1", "23 Oct 2026"),
 }
 
 # One page per competitor. Sections render in a fixed order (see build.py): quick answer, table,

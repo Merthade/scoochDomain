@@ -6,8 +6,9 @@ Raw device screenshots: the app repo's Marketing/competitors/<key>-<name>.png (d
 use each app's own furnished sample or template room (Emil, 2026-10-23: stacked sofas in an empty room
 read as staged), with its coffee table or sofa moved onto the other, the same move as in ours. SHOTS maps each
 published slot to its raw, so the raw names can stay what the test called them. Output:
-assets/compare/<key>-<slot>.webp, in the same iPhone shell as our own shots, 640 px wide (a
-landscape-only app's capture is turned upright first and framed sideways).
+assets/compare/<key>-<slot>.webp, in the same iPhone shell as our own shots, 640 px wide. A
+landscape-only app's capture (Keyplan 3D) is stood upright, the phone's top to the left as it was held,
+so it is the same size as the rest instead of a sliver (Emil, 2026-10-23).
 
 MASKS hide what is not the app's to show: a "hide" box is pixelated. Boxes are fractions of the
 upright image. None needed so far: no ads were seen, and the shots with the tester's own account
@@ -45,16 +46,21 @@ SHOTS = {
     "keyplan-3d-catalogue": "keyplan-3d-catalogue.png",
     "keyplan-3d-paywall": "keyplan-3d-paywall.png",
     "live-home-3d-wall": "live-home-3d-welcome.png",
-    "live-home-3d-plan": "live-home-3d-plan-v2.png",
-    "live-home-3d-fit": "live-home-3d-overlap-v2.png",
+    # v3: the sample's garden trees hidden with its own Make Invisible (seen from above they were a
+    # cloud of green circles over the plan); the sofa where v2 had it.
+    "live-home-3d-plan": "live-home-3d-plan-v3.png",
+    "live-home-3d-fit": "live-home-3d-overlap-v3.png",
     "live-home-3d-paywall": "live-home-3d-paywall.png",
     "home-planner-ai-wall": "home-planner-ai-paywall.png",
     "home-planner-ai-plan": "home-planner-ai-plan-v2.png",
     "home-planner-ai-catalogue": "home-planner-ai-catalogue.png",
     "home-planner-ai-fit": "home-planner-ai-overlap-v2.png",
     "home-planner-ai-offer": "home-planner-ai-countdown.png",
-    "draft-paper-plan": "draft-paper-tools.png",
+    "draft-paper-plan": "draft-paper-plan-v2.png",
     "draft-paper-paywall": "draft-paper-paywall.png",
+    # Not a capture: DrawPlan closed at every launch, so this is a stand-in black screen until Emil's
+    # picture replaces the raw (same file name).
+    "drawplan-plan": "drawplan-placeholder.png",
 }
 
 # Ours, for the slots our existing site shots do not cover: the shipped 1.0.2 (79dbbc5) on an iPhone 17 Pro
@@ -94,6 +100,8 @@ def add_island(img):
 def frame(src, name, camera=False):
     img = Image.open(src).convert("RGBA")
     img = apply_masks(img, name)
+    if img.width > img.height:
+        img = img.rotate(-90, expand=True)
     if camera:
         img = add_camera(add_island(img))
     framed = shell(img)
@@ -107,9 +115,9 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for name, raw in SHOTS.items():
         # The same phone as ours, Dynamic Island included (the test iPhone has a notch, which leaves
-        # the top centre of its status bar empty); a landscape capture keeps the plain shell.
-        src = os.path.join(RAW, raw)
-        frame(src, name, camera=Image.open(src).height > Image.open(src).width)
+        # the top centre of its status bar empty, and the left edge of a landscape screen). Not on the
+        # black stand-in: add_camera finds no island edge on black and puts the lens in the corner.
+        frame(os.path.join(RAW, raw), name, camera=not name.startswith("drawplan"))
     for name, raw in OURS.items():
         src = os.path.join(RAW, raw)
         if os.path.isfile(src):
