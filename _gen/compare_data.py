@@ -70,11 +70,11 @@ APPS = [
               "3D walkthrough, renders and VR export",
               "Import a blueprint and trace it"],
         cons=["Premium is a subscription, and recent reviews describe one-time purchases moved to it",
-              "Nothing warned us when two sofas stood on the same spot, half through a wall",
+              "Nothing warned us when we moved a table onto the sofa",
               "Recent reviews describe ads and most items locked in the free version"],
         price="Free download. Weekly premium $4.99, monthly plans $12.99 to $22.99, yearly plans $44.99 to $79.99",
         once="No, subscription only", year="$44.99 to $79.99",
-        fit="No, stacked pieces went unflagged in our test",
+        fit="No, a table on the sofa went unflagged in our test",
         sizes="Yes, per its listing",
         three_d="Yes", scan="Not described on the listing",
         ads="Not tested; recent reviews describe ads", account="Yes, its sign-in page can be skipped",
@@ -109,19 +109,19 @@ APPS = [
         best_for="3D room design with a scanner, measure tools and renders",
         summary=("A 2D and 3D design app with a built-in 3D scanner, a digital tape measure, AI design and "
                  "realistic renders. Its first screen promises real furniture that actually fits, from 564,000+ "
-                 "products; its paywall comes before the first room, and in our test it did not flag two sofas "
-                 "on the same spot."),
+                 "products; its paywall comes before the first room, and in our test it did not flag a coffee "
+                 "table moved onto the sofa."),
         pros=["Built-in 3D scanner and measure tools",
               "2D and 3D, with realistic renders",
               "Brand-name products at their real sizes",
               "30 languages, the most here"],
         cons=["A paywall before the first room; free, up to 45 items per category",
-              "Nothing warned us when two sofas stood on the same spot",
+              "Nothing warned us when we moved the coffee table onto the sofa",
               "Ten different purchases make the real price hard to read"],
         price=("Free download. Purchases from $5.99 to $74.99, 6-month plans at $29.99 and $34.99, "
                "Weekly Business $17.99"),
         once="Not stated on the listing", year="$59.98, two 6-month plans",
-        fit="No, stacked pieces went unflagged in our test",
+        fit="No, a table on the sofa went unflagged in our test",
         sizes="Not described on the listing",
         three_d="Yes", scan="Yes, built-in 3D scanner",
         ads="Yes, none seen", account="Yes, no account",
@@ -141,11 +141,11 @@ APPS = [
               "Apple Pencil and Vision Pro support"],
         cons=["An account before the first room, then a trial offer",
               "Free, about half the sofas we saw were locked",
-              "Nothing warned us when two sofas stood on the same spot"],
+              "Nothing warned us when we moved the coffee table onto the sofa"],
         price=("Free with limits. Subscriptions from $7.99 a week, $19.99 a month, $29.99 to $119.99 a year; "
                "full catalogue $6.99 for 30 days or $15.99 a year"),
         once="No, subscription only", year="$29.99 to $119.99",
-        fit="No, stacked pieces went unflagged in our test",
+        fit="No, a table on the sofa went unflagged in our test",
         sizes="Yes, with premium (its free version has no furniture customization)",
         three_d="Yes", scan="Yes, with the camera",
         ads="Yes, none seen", account="No, an account before the first room",
@@ -166,11 +166,11 @@ APPS = [
               "Xactimate and CoreLogic integrations"],
         cons=["Priced for businesses: yearly plans from $129.99",
               "A sign-up before anything is saved; free holds 2 projects",
-              "Nothing warned us about a couch on the coffee table"],
+              "Nothing warned us when we moved the coffee table onto the sofa"],
         price=("Free with a sign-up, up to 2 projects. Sketch Plan $12.99 a month or $129.99 a year, Report "
                "Plan $39.99 or $399.99, Estimate Plan $89.99 or $899.99"),
         once="No, subscription only", year="$129.99 to $899.99",
-        fit="No, stacked pieces went unflagged in our test",
+        fit="No, a table on the sofa went unflagged in our test",
         sizes="Not described on the listing",
         three_d="Not described on the listing", scan="Yes, with the camera",
         ads="Yes, none seen", account="No, a free sign-up before anything is saved",
@@ -189,12 +189,12 @@ APPS = [
               "Renders, flyover videos and panoramas",
               "Lifetime upgrades, and Mac and Windows versions"],
         cons=["Free, Save was greyed out, and its listing says exports carry a watermark",
-              "Nothing warned us when a sofa went half through the wall",
+              "Nothing warned us when we pushed the sofa over the coffee table",
               "The lifetime Standard upgrade is $59.99"],
         price=("Free version with watermarked exports and one project. Standard $6.99 a month, $24.99 a year or "
                "$59.99 lifetime; Pro $14.99 a month, $49.99 a year or $129.99 lifetime"),
         once="Yes, $59.99 lifetime", year="$24.99 to $49.99",
-        fit="No, a sofa through the wall went unflagged in our test",
+        fit="No, the sofa over the coffee table went unflagged in our test",
         sizes="Not described on the listing",
         three_d="Yes", scan="Yes, with LiDAR",
         ads="Yes, none seen", account="Yes, no account",
@@ -266,7 +266,7 @@ FREE_TILE = {"scooch": ("Intro only", "a guided first room")}
 
 # Under the summary table. Each names whichever app the data says wins, not always us.
 PICKS = [
-    ("Checks that furniture fits", "Scooch. Of the five other apps we could test, none flagged two pieces on the same spot"),
+    ("Checks that furniture fits", "Scooch. In the five other apps we could test, none flagged a coffee table moved onto the sofa"),
     ("Lowest one-time price", "Keyplan 3D Lite, $5.99 for its Standard version; Scooch and Draft Paper are $9.99"),
     ("For 3D design and renders", "Planner 5D or Live Home 3D"),
     ("For scanning a room with the camera", "magicplan, Home Planner AI, or Live Home 3D with LiDAR"),
@@ -305,31 +305,33 @@ OUR_SHOT = {
 # its file exists AND its app is in SHOTS_TAKEN; until then build.py prints it as missing.
 # One capture per slot, the same slots for every app, so pages compare like with like.
 SLOTS = [("wall", "Before your first room"), ("plan", "A room with furniture"),
-         ("catalogue", "Choosing furniture"), ("fit", "Two pieces on the same spot"),
+         ("catalogue", "Choosing furniture"), ("fit", "A coffee table moved onto the sofa"),
          ("paywall", "The upgrade screen"), ("offer", "Closing the upgrade screen")]
 # Where a slot shows something other than its usual screen, the row says so.
 SLOT_TITLES = {"draft-paper": {"plan": "Drawing a room"}, "keyplan-3d": {"plan": "A room"},
-               "planner-5d": {"plan": "A room"}}
+               "home-design-3d": {"fit": "A table moved onto the sofa"},
+               "live-home-3d": {"fit": "The sofa pushed over the coffee table"},
+               "home-planner-ai": {"offer": "Back on its home screen"}}
 THEIR_SHOTS = {
     "home-design-3d": {
         "wall": "Home Design 3D on first launch: a page asking whether we would like to create an account, which Later skips",
-        "plan": "A 3.56 by 4.23 m room drawn with one drag in Home Design 3D's 2D view",
+        "plan": "The ground floor of Home Design 3D's furnished sample house in its 2D view",
         "catalogue": "Home Design 3D's catalogue: 584 items under Living room alone, each with its size",
-        "fit": "Two sofas dropped on the same spot in Home Design 3D, half through the wall and outside the room, with nothing flagged",
+        "fit": "The same floor with the lounge table moved onto the sofa: nothing flagged",
     },
     "planner-5d": {
         "wall": "Planner 5D on first launch: create an account to save all your projects, with no way past it",
-        "plan": "A 5 by 5 m living room added from Planner 5D's room shapes",
+        "plan": "A 4.50 by 3.40 m living room furnished by Planner 5D's Smart wizard, the size of ours",
         "catalogue": "Planner 5D's straight sofas on the free tier, about half of them behind a padlock",
-        "fit": "A sofa and its copy stacked in Planner 5D, with nothing flagged",
+        "fit": "The same room with the coffee table moved onto the sofa: nothing flagged",
         "paywall": "Planner 5D's paywall after setup: a 7-day free trial, then a yearly plan",
         "offer": "What Planner 5D showed when we closed its paywall: a one-time offer of 80% off the first year that disappears when you close it",
     },
     "magicplan": {
         "wall": "magicplan for a new user: the free Starter plan, all features for up to 2 projects, after a sign-up",
-        "plan": "magicplan's demo flat, every wall measured",
+        "plan": "magicplan's furnished demo flat, every wall measured",
         "catalogue": "magicplan's objects by category",
-        "fit": "A couch inserted from magicplan's catalogue and dragged onto the coffee table, with nothing flagged",
+        "fit": "The demo flat's living room with the coffee table moved onto the sofa: nothing flagged",
     },
     "keyplan-3d": {
         "plan": "A 2.22 by 1.55 m room drawn in Keyplan 3D, which runs in landscape on iPhone",
@@ -338,15 +340,16 @@ THEIR_SHOTS = {
     },
     "live-home-3d": {
         "wall": "Live Home 3D's first screen: a welcome, then My Projects or Create New, with no account",
-        "plan": "Live Home 3D's studio apartment sample in its 2D view",
-        "fit": "Live Home 3D's corner sofa dragged half through the wall and out of the room, with nothing flagged",
+        "plan": "Live Home 3D's furnished studio apartment sample in its 2D view, 7.8 by 7.6 m",
+        "fit": "The same studio with the corner sofa pushed over the coffee table and an armchair: nothing flagged",
         "paywall": "Live Home 3D's store: Standard and Pro, each monthly, yearly or for life",
     },
     "home-planner-ai": {
         "wall": "Home Planner AI's paywall, shown before the first room; its X closes it",
-        "plan": "A 6 by 5 m room with a door and windows in Home Planner AI",
+        "plan": "Home Planner AI's furnished 4.00 by 5.10 m living room template",
         "catalogue": "Home Planner AI's sofas on the free tier: up to 45 items in this category",
-        "fit": "A sofa and its copy on the same spot in Home Planner AI, with nothing flagged",
+        "fit": "The same room with the coffee table moved onto the corner sofa: nothing flagged",
+        "offer": "Home Planner AI after we closed its paywall: 'Price Crash! HUGE DISCOUNT' with an hour's countdown, and 9 rooms left to add",
     },
     "draft-paper": {
         "plan": "Draft Paper's drawing tools on a blank sheet: lines, shapes and measurements, no furniture",
@@ -358,7 +361,7 @@ OUR_SHOTS = {
     "wall": ("/assets/compare/scooch-wall.webp", "Scooch's first screen: the guided first room starts, with no account or sign-in", "Scooch"),
     "plan": ("/assets/shot-plan.webp", "A two-room flat drawn to scale in Scooch, every wall measured", "Scooch"),
     "catalogue": ("/assets/shot-furniture.webp", "The Scooch furniture list with each piece's default size", "Scooch"),
-    "fit": ("/assets/shot-clash.webp", "A 360 cm sofa outlined in red in Scooch because it does not fit the room", "Scooch"),
+    "fit": ("/assets/compare/scooch-fit.webp", "Scooch's sample flat with the coffee table moved onto the sofa: both outlined in red", "Scooch"),
     "paywall": ("/assets/compare/scooch-paywall.webp", "Scooch's unlock screen: one payment, yours for good, no subscription", "Scooch"),
 }
 OUR_NONE = {"offer": ("One price", "Scooch is $9.99 once. No trial to cancel, no countdown.")}
@@ -369,7 +372,7 @@ TESTED = {
     "home-design-3d": [
         "It opened with Apple's tracking request, then a page asking whether we would like to create an account. Later skips it.",
         "A room in its 2D view took one drag, with the wall lengths drawn inside and out. Furniture comes from a large catalogue, 584 items under Living room alone, each with its size.",
-        "We dropped two sofas on the same spot, half through the wall and outside the room. Nothing turned red and nothing warned us.",
+        "In its furnished sample house we moved the lounge table onto the sofa. Nothing turned red and nothing warned us. (Earlier, in an empty room, two sofas dropped on the same spot, half through a wall, went unflagged too.)",
         "We could not see its free version. The iPhone we used is signed in with our own Apple ID, which bought Home Design 3D years ago, and every paid feature we tried was open. Its prices here come from the US purchase list.",
     ],
     "planner-5d": [
@@ -378,13 +381,13 @@ TESTED = {
         "Three questions followed. One of the goals it offers is 'Test what furniture fits in a room'.",
         "Then its paywall: a 7-day free trial, then a yearly plan. Closing it brought up a one-time offer of 80% off the first year, gone once closed.",
         "On the free tier, about half the straight sofas in its catalogue carried a padlock.",
-        "We added a sofa and a copy of it on the same spot. Nothing was flagged.",
+        "Its Smart wizard furnished a 4.50 by 3.40 m living room for us, the size of the one in our own screenshots. We moved its coffee table onto the sofa. Nothing was flagged.",
     ],
     "magicplan": [
         "Its first screen asks whether you already have an account. As a new user we were offered the free Starter plan, all features for up to 2 projects, after a sign-up.",
         "Without an account there is a demo that warns 'Changes will not be saved'. It opens a sample flat with every wall measured.",
         "Selected furniture offers Set Distance, to place it a set distance from a wall.",
-        "A couch inserted from its catalogue landed across a wall and inside a door's swing, and we dragged it on top of the coffee table. Nothing was flagged.",
+        "In its furnished demo flat we moved the coffee table onto the sofa. Nothing was flagged. A couch inserted from its catalogue had also landed across a wall and inside a door's swing without a word.",
     ],
     "keyplan-3d": [
         "On iPhone it only runs sideways, in landscape.",
@@ -394,16 +397,17 @@ TESTED = {
     ],
     "live-home-3d": [
         "No account and no prompts: a welcome screen, then templates and sample rooms.",
-        "In the free version, Save was greyed out.",
+        "In the free version, Save was greyed out, and opening a second project warned that the first could no longer be edited: the free version handles one project at a time.",
         "Its store sells Standard and Pro, each monthly, yearly or for life.",
-        "We dragged a dining chair onto the sofa, then the corner sofa half through the wall and out of the room. Nothing was flagged.",
+        "In its furnished studio sample we pushed the corner sofa over the coffee table and an armchair. Nothing was flagged. Earlier, a sofa dragged half through a wall went unflagged too.",
     ],
     "home-planner-ai": [
         "Its first onboarding card reads 'Real furniture that actually fits', with 564,000+ real products at true-to-life sizes.",
         "As soon as we picked a room shape, before the first room, its paywall came up: weekly, monthly or 6-month plans, each with a crossed-out price several times higher. Its X closes it.",
         "On the free tier its catalogue offers up to 45 items per category, and asks for the subscription for the full 564,000.",
         "Selected furniture shows its distance to each wall.",
-        "We placed a sofa and duplicated it on the same spot. Nothing was flagged.",
+        "From its own furnished 4.00 by 5.10 m living room template we moved the coffee table onto the corner sofa. Nothing was flagged.",
+        "Back on its home screen after closing the paywall: 'Price Crash! HUGE DISCOUNT for all PRO subscriptions' with a one-hour countdown, and 'Add Living room (9 left)'.",
     ],
     "draft-paper": [
         "A short tutorial, then a blank sheet of grid paper. No account, no prompts and no furniture: you draw every line yourself.",
@@ -451,7 +455,7 @@ VERSUS = {
         ("Blueprints", "Import an existing plan and draw over it."),
     ],
     us_stronger=[
-        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room, so a misfit shows on the plan, not on moving day. In our test, Home Design 3D let two sofas stand on the same spot, half through a wall, without a word."),
+        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room, so a misfit shows on the plan, not on moving day. In our test, in Home Design 3D's own furnished sample house, we moved the lounge table onto the sofa and it said nothing."),
         ("One price", "$9.99 once. Home Design 3D is a subscription, and recent reviews describe earlier one-time purchases moving to it."),
         ("No tracking", "Home Design 3D's App Store privacy label declares data used to track you, and it asked to track us on first launch; Scooch's label declares none."),
     ],
@@ -470,7 +474,7 @@ VERSUS = {
              "iPhone's Apple ID bought it years ago. Scooch is a free download; planning needs a one-time $9.99 unlock."),
     faq=[
         ("Does Scooch do several floors or 3D?", "No. Scooch plans rooms in 2D. You can keep several plans, but not floors stacked in 3D."),
-        ("Does Home Design 3D warn when furniture will not fit?", "Not in our test (version 5.10, 23 October 2026): two sofas dropped on the same spot, half through a wall, were not flagged. Scooch outlines such pieces in red."),
+        ("Does Home Design 3D warn when furniture will not fit?", "Not in our test (version 5.10, 23 October 2026): in its own furnished sample house, a table moved onto the sofa was not flagged. Scooch outlines both pieces in red."),
         ("Is either a one-time purchase?", "Scooch is: $9.99 once. Home Design 3D's US purchase list shows only weekly, monthly and yearly plans."),
     ],
 ),
@@ -529,7 +533,7 @@ VERSUS = {
         ("Languages", "30 languages, the most of any app compared here; Scooch has 16."),
     ],
     us_stronger=[
-        ("A warning before you lift anything", "Scooch outlines in red any piece that overlaps another or sticks out of the room, so a misfit shows before you buy. Home Planner AI's first screen promises 'real furniture that actually fits', but in our test it let a sofa and its copy stand on the same spot without a word."),
+        ("A warning before you lift anything", "Scooch outlines in red any piece that overlaps another or sticks out of the room, so a misfit shows before you buy. Home Planner AI's first screen promises 'real furniture that actually fits', but in our test, in its own furnished template room, it let us put the coffee table on the sofa without a word."),
         ("Typed sizes from the start", "Rooms and furniture take the exact size you type. A recent Home Planner AI review says typing a room's size needed the subscription."),
         ("One clear price, after you have tried it", "The guided first room is free, then $9.99 once. Home Planner AI shows its paywall before the first room, with weekly, monthly and 6-month plans, and its purchase list runs to ten items."),
     ],
@@ -550,7 +554,7 @@ VERSUS = {
              "monthly and 6-month plans. Scooch is a free download; planning needs a one-time $9.99 unlock."),
     faq=[
         ("Can Scooch scan a room?", "No. You measure the room and type or drag its size. Home Planner AI has a built-in 3D scanner."),
-        ("Does Home Planner AI warn when furniture will not fit?", "Not in our test (version 26.50, 23 October 2026): a sofa and its copy on the same spot were not flagged. Scooch outlines such pieces in red."),
+        ("Does Home Planner AI warn when furniture will not fit?", "Not in our test (version 26.50, 23 October 2026): in its own furnished template room, a coffee table moved onto the sofa was not flagged. Scooch outlines both pieces in red."),
         ("How much does each cost?", "Scooch: $9.99 once. Home Planner AI lists purchases from $5.99 to $74.99 and 6-month subscriptions; see Pricing above."),
     ],
 ),
@@ -571,7 +575,7 @@ VERSUS = {
         ("More platforms and languages", "It runs across platforms and on Vision Pro, in 24 languages to Scooch's 16."),
     ],
     us_stronger=[
-        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. Planner 5D offered us 'Test what furniture fits in a room' as a goal during setup, then let a sofa and its copy stand on the same spot without a word."),
+        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. Planner 5D offered us 'Test what furniture fits in a room' as a goal during setup, then, in a living room its own wizard had furnished, let us put the coffee table on the sofa without a word."),
         ("Exact sizes without a subscription", "Every Scooch piece resizes to the centimetre with the one-time unlock. Planner 5D's listing says its free version has no furniture customization."),
         ("One price, no account", "$9.99 once, nothing to sign up for. Planner 5D asked for an account before the first room, then offered a free trial of a yearly plan, and when we closed that, a one-time discount that disappears once closed."),
         ("No tracking", "Planner 5D's App Store privacy label declares data used to track you, and it asked to track us before the first screen; Scooch's label declares none."),
@@ -595,7 +599,7 @@ VERSUS = {
     faq=[
         ("Is Planner 5D free?", "It is free to download with a limited catalogue, but it asked us for an account before the first room. On the free tier about half the sofas we saw were locked, and its listing says furniture customization needs premium."),
         ("Does Scooch work in 3D?", "No. Scooch is 2D. It shows real sizes, door swings and the space drawers and sofa beds need, but not a 3D view."),
-        ("Which one tells me if a sofa will fit?", "Scooch outlines furniture in red when it overlaps or sticks out of the room. In our test (Planner 5D 5.13.1, 23 October 2026), a sofa and its copy on the same spot were not flagged."),
+        ("Which one tells me if a sofa will fit?", "Scooch outlines furniture in red when it overlaps or sticks out of the room. In our test (Planner 5D 5.13.1, 23 October 2026), a coffee table moved onto the sofa was not flagged."),
     ],
 ),
 "magicplan": dict(
@@ -614,7 +618,7 @@ VERSUS = {
         ("A long track record", "Years on the App Store and far more ratings than Scooch, which is new."),
     ],
     us_stronger=[
-        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, a couch from magicplan's catalogue landed across a wall and inside a door's swing, and sat on the coffee table, without a word."),
+        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, in magicplan's furnished demo flat, the coffee table moved onto the sofa without a word."),
         ("Furniture that knows its size", "37 pieces at real sizes, each resized to the centimetre, plus pieces you draw yourself."),
         ("No account, one price", "$9.99 once, nothing to sign up for. magicplan's free Starter plan needs a sign-up and holds 2 projects; its paid plans start at $12.99 a month or $129.99 a year."),
         ("Languages", "Scooch is in 16 languages; magicplan's listing names 5."),
@@ -636,7 +640,7 @@ VERSUS = {
              "$9.99 unlock, with no subscription."),
     faq=[
         ("Can Scooch scan a room like magicplan?", "No. Scooch has no camera or LiDAR scan: you measure the room and type or drag its size."),
-        ("Does magicplan warn when furniture will not fit?", "Not in our test (version 2026.41.0, 23 October 2026): a couch across a wall and on top of the coffee table was not flagged. Scooch outlines such pieces in red."),
+        ("Does magicplan warn when furniture will not fit?", "Not in our test (version 2026.41.0, 23 October 2026): in its furnished demo flat, a coffee table moved onto the sofa was not flagged. Scooch outlines both pieces in red."),
         ("Which is cheaper?", "Scooch: $9.99 once. magicplan's paid plans start at $12.99 a month or $129.99 a year; its free plan holds 2 projects."),
     ],
 ),
@@ -656,8 +660,8 @@ VERSUS = {
         ("Catalogue and platforms", "5,000+ items and 3,000+ materials, and versions for Mac and Windows."),
     ],
     us_stronger=[
-        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, Live Home 3D let a dining chair sit on the sofa, and the corner sofa go half through the wall, without a word."),
-        ("Price", "Everything in Scooch is $9.99 once; Live Home 3D's Standard upgrade is $24.99 a year or $59.99 lifetime, and its free version kept Save greyed out."),
+        ("A warning before you lift anything", "Scooch outlines in red a piece that overlaps another or sticks out of the room. In our test, in Live Home 3D's furnished studio sample, the corner sofa went over the coffee table and an armchair without a word."),
+        ("Price", "Everything in Scooch is $9.99 once; Live Home 3D's Standard upgrade is $24.99 a year or $59.99 lifetime, and its free version kept Save greyed out and edits one project at a time."),
         ("Languages", "16 languages to Live Home 3D's 12."),
     ],
     we_dont=[
@@ -678,7 +682,7 @@ VERSUS = {
     faq=[
         ("Is Live Home 3D free?", "There is a free version; per its listing, exports carry a watermark and only one project can be used at a time, and in our test Save was greyed out."),
         ("Can Scooch scan with LiDAR?", "No. You measure the room and type or drag its size."),
-        ("Does Live Home 3D warn when furniture will not fit?", "Not in our test (version 5.1, 23 October 2026): a corner sofa dragged half through the wall was not flagged. Scooch outlines such pieces in red."),
+        ("Does Live Home 3D warn when furniture will not fit?", "Not in our test (version 5.1, 23 October 2026): in its furnished studio sample, the sofa pushed over the coffee table was not flagged. Scooch outlines both pieces in red."),
     ],
 ),
 "draft-paper": dict(
@@ -768,9 +772,9 @@ ROUNDUP_FAQ = [
      "From this list: Scooch and Draft Paper ($9.99 once) and Keyplan 3D Lite ($5.99 once for its Standard version). "
      "Live Home 3D sells lifetime upgrades as well as subscriptions."),
     ("Which app tells me if my furniture will fit?",
-     "Scooch outlines in red any piece that overlaps another or sticks out of the room. On 23 October 2026 we placed "
-     "two pieces on the same spot in five of the others (Home Design 3D, Planner 5D, magicplan, Live Home 3D and "
-     "Home Planner AI), and none of them flagged it; none of the other listings describe a check like that."),
+     "Scooch outlines in red any piece that overlaps another or sticks out of the room. On 23 October 2026 we took a "
+     "furnished room in five of the others (Home Design 3D, Planner 5D, magicplan, Live Home 3D and Home Planner AI), "
+     "moved the coffee table onto the sofa, and none of them flagged it; none of the other listings describe a check like that."),
     ("How were these apps chosen?",
      "From the top results for room and floor planner searches on the US App Store, keeping apps that plan rooms on "
      "iPhone and have an active listing. Facts come from each listing, purchase list, privacy label and recent public "

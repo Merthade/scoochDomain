@@ -1357,7 +1357,8 @@ def footnotes(about_extra=""):
                  "country and change over time. On “Plan without paying”, a tick means free with no ads, amber "
                  "means free with ads, an account or locked parts, a cross means a payment or a trial comes first, "
                  "and a dash that we could not open the app. “Warns when furniture does not fit” is what happened "
-                 "when we put two pieces on the same spot, or one through a wall."),
+                 "when we took a furnished room from each app's own samples or templates and moved the coffee table "
+                 "onto the sofa."),
     ]
     return ('<div class="footnotes">\n' + "\n".join(
         f'    <p id="fn-{k}"><span class="fn-mark">{FN[k]}</span> {html.escape(t)}</p>' for k, t in notes)
