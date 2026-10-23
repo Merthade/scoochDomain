@@ -33,9 +33,10 @@ SHOTS = {
     "home-design-3d-catalogue": "home-design-3d-catalogue.png",
     "home-design-3d-fit": "home-design-3d-overlap-v2.png",
     "planner-5d-wall": "planner-5d-wall.png",
-    "planner-5d-plan": "planner-5d-plan-v2.png",
+    # v3: zoomed in by hand on the phone (its canvas ignores the driver's pinch), Emil 2026-10-23.
+    "planner-5d-plan": "planner-5d-plan-v3.png",
     "planner-5d-catalogue": "planner-5d-catalogue.png",
-    "planner-5d-fit": "planner-5d-overlap-v2.png",
+    "planner-5d-fit": "planner-5d-overlap-v3.png",
     "planner-5d-paywall": "planner-5d-paywall.png",
     "planner-5d-offer": "planner-5d-exit-offer.png",
     "magicplan-wall": "magicplan-wall.png",
@@ -75,6 +76,23 @@ OURS = {
 
 MASKS = {}
 
+# HIGHLIGHTS ring a point the row's caption makes, in the warn amber of the compare tables: (x0, y0, x1, y1)
+# fractions of the upright raw. Planner 5D's "Ask Copilot" button is 175 x 56 pt of a 414 pt wide editor
+# (Emil, 2026-10-23: call it out).
+HIGHLIGHTS = {"planner-5d-plan": [(0.270, 0.040, 0.731, 0.121)]}
+
+
+NO_ISLAND = {"planner-5d-plan", "planner-5d-fit"}
+
+
+def apply_highlights(img, name):
+    W, H = img.size
+    d = ImageDraw.Draw(img)
+    for x0, y0, x1, y1 in HIGHLIGHTS.get(name, []):
+        box = [x0 * W, y0 * H, x1 * W, y1 * H]
+        d.rounded_rectangle(box, radius=(box[3] - box[1]) / 2, outline=(242, 185, 75, 255), width=round(W * 0.009))
+    return img
+
 
 def apply_masks(img, name):
     W, H = img.size
@@ -98,7 +116,7 @@ def add_island(img):
 
 def frame(src, name, camera=False):
     img = Image.open(src).convert("RGBA")
-    img = apply_masks(img, name)
+    img = apply_highlights(apply_masks(img, name), name)
     if img.width > img.height:
         img = img.rotate(-90, expand=True)
     if camera:
@@ -116,7 +134,9 @@ if __name__ == "__main__":
         # The same phone as ours, Dynamic Island included (the test iPhone has a notch, which leaves
         # the top centre of its status bar empty, and the left edge of a landscape screen). Not on the
         # black stand-in: add_camera finds no island edge on black and puts the lens in the corner.
-        frame(os.path.join(RAW, raw), name, camera=not name.startswith("drawplan"))
+        # Nor where the app's own controls sit in the top 48 pt: on the notched test phone Planner 5D's editor
+        # puts Ask Copilot where an island would cover it.
+        frame(os.path.join(RAW, raw), name, camera=not name.startswith("drawplan") and name not in NO_ISLAND)
     for name, raw in OURS.items():
         src = os.path.join(RAW, raw)
         if os.path.isfile(src):

@@ -320,7 +320,7 @@ THEIR_SHOTS = {
     },
     "planner-5d": {
         "wall": "Planner 5D on first launch: create an account to save all your projects, with no way past it",
-        "plan": "A 4.50 by 3.40 m living room furnished by Planner 5D's Smart wizard, the size of ours",
+        "plan": "A 4.50 by 3.40 m living room furnished by Planner 5D's Smart wizard, the size of ours. Ringed: its Ask Copilot button, floating over the top of the plan at about 40% of the screen's width",
         "catalogue": "Planner 5D's straight sofas on the free tier, about half of them behind a padlock",
         "fit": "The same room with the coffee table moved onto the sofa: nothing flagged",
         "paywall": "Planner 5D's paywall after setup: a 7-day free trial, then a yearly plan",
@@ -384,6 +384,7 @@ TESTED = {
         "Then its paywall: a 7-day free trial, then a yearly plan. Closing it brought up a one-time offer of 80% off the first year, gone once closed.",
         "On the free tier, about half the straight sofas in its catalogue carried a padlock.",
         "Its Smart wizard furnished a 4.50 by 3.40 m living room for us, the size of the one in our own screenshots. We moved its coffee table onto the sofa. Nothing was flagged.",
+        "A large 'Ask Copilot' button floats over the top of the plan the whole time, about 40% of the screen's width.",
     ],
     "magicplan": [
         "Its first screen asks whether you already have an account. As a new user we were offered the free Starter plan, all features for up to 2 projects, after a sign-up.",
