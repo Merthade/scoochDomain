@@ -1843,3 +1843,9 @@ write("sitemap.xml", "\n".join(sitemap) + "\n")
 write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n")
 write("CNAME", "getscooch.com\n")
 print(f"{len(urls) + len(COMPARE_URLS)} urls in the sitemap")
+
+# ---------- WebP fallback (2026-10-30) ----------
+# Some company networks refuse image/webp: every WebP gets a PNG twin and every <img> an onerror
+# that swaps it in. Runs last, over generated and hand-written pages alike (_gen/webp_fallback.py).
+import webp_fallback  # noqa: E402
+webp_fallback.run()

@@ -236,6 +236,9 @@ def main():
         if r.returncode != 0:
             fails.append("calculator maths: " + (r.stdout + r.stderr).strip().splitlines()[-1])
 
+    # Every WebP <img> falls back to its PNG twin (networks that block WebP, webp_fallback.py).
+    import webp_fallback
+    fails += webp_fallback.check(ROOT)
     for f in fails:
         print("FAIL", f)
     print(f"{len(pages)} pages, {len(locs)} sitemap urls, {len(fails)} failures")
